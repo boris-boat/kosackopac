@@ -24,11 +24,23 @@ export const Customers = ({ user }) => {
   }, []);
 
   const handleSetNewCustomerValues = (value: string, label: string) => {
-    console.log(value, label);
+    setNewCustomerData((prev) => ({ ...prev, [label]: value }));
+  };
+
+  const handleSubmit = async () => {
+    const { data, error } = await supabase.from("customers").insert([
+      {
+        registeredUsers_id: user.id,
+        name: newCustomerData.name,
+        phone: newCustomerData.phone,
+        address: newCustomerData.address,
+      },
+    ]);
   };
 
   return (
     <div className="all-customers">
+      <pre>{newCustomerData.name}</pre>
       {customers.map((customer) => (
         <div className="customer" key={customer.id}>
           {customer.name}
@@ -66,7 +78,10 @@ export const Customers = ({ user }) => {
           <SlButton
             slot="footer"
             variant="success"
-            onClick={() => setDialogOpen(false)}
+            onClick={() => {
+              handleSubmit();
+              setDialogOpen(false);
+            }}
           >
             Confirm
           </SlButton>

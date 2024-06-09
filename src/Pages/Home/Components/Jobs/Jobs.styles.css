@@ -9,3 +9,19 @@
     box-shadow: inset 0px 0px 0px 1px yellowgreen;
   }
 }
+.react-datepicker-wrapper {
+  width: 96%;
+}
+.custom-datepicker {
+  margin-top: 3px;
+  width: 100%;
+  padding: 6px;
+  font-size: 1.3rem;
+  border-radius: 5px;
+  border: 1px solid gray;
+}
+.jobs-dialog-buttons-wrapper {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-around;
+}
