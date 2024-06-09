@@ -1,0 +1,11 @@
+.all-jobs {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  .job {
+    padding: 5px;
+    border-radius: 10px;
+    box-shadow: inset 0px 0px 0px 1px yellowgreen;
+  }
+}

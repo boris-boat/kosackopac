@@ -1,0 +1,22 @@
+.navbar {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .burger-button-wrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 0.2em;
+  }
+  .navbar-content-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .current-location {
+    font-size: 2rem;
+  }
+}

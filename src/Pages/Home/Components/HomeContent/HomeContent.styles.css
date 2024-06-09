@@ -1,0 +1,18 @@
+.home-content-filter {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 10%;
+  box-shadow: inset 0px 0px 0px 1px green;
+}
+.homepage-all-jobs {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  .homepage-job {
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: inset 0px 0px 0px 1px yellowgreen;
+  }
+}

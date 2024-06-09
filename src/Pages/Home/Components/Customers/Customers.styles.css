@@ -1,0 +1,28 @@
+.all-customers {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  .customer:last-child {
+    margin-top: 20px;
+  }
+  .customer {
+    padding: 5px;
+    border-radius: 10px;
+    box-shadow: inset 0px 0px 0px 1px yellowgreen;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+.customer-add-customer-form {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.customer-dialog-buttons-wrapper {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-around;
+}
