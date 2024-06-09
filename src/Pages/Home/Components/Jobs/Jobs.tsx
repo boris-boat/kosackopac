@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./Jobs.styles.css";
+import moment from "moment";
 import {
   SlButton,
   SlDialog,
@@ -30,15 +31,18 @@ export const Jobs = ({ user }) => {
   }, []);
 
   const handleSubmit = async () => {
-    console.log(newJobData);
-    // const { data, error } = await supabase.from("jobs").insert([
-    //   {
-    //     title: newJobData.title,
-    //     description: newJobData.description,
-    //     customer_id: user.id,
-    //     registeredUser_id: user.id,
-    //   },
-    // ]);
+    const parsedDate = moment(newJobData.scheduledDate);
+    const { data, error } = await supabase.from("jobs").insert([
+      {
+        title: newJobData.title,
+        description: newJobData.description,
+        customer_id: newJobData.customer_id,
+        registeredUser_id: user.id,
+        scheduledDate: parsedDate.add(2, "hours"),
+        status: "pending",
+      },
+    ]);
+    console.log(error ? error : data);
   };
   return (
     <div className="all-jobs">
@@ -63,12 +67,14 @@ export const Jobs = ({ user }) => {
         <SlInput
           label="Title"
           clearable
-          onSlInput={(e) => handleSetNewJobValues(e.target.value, "name")}
+          onSlInput={(e) => handleSetNewJobValues(e.target.value, "title")}
         />
         <SlInput
           label="Description"
           clearable
-          onSlInput={(e) => handleSetNewJobValues(e.target.value, "address")}
+          onSlInput={(e) =>
+            handleSetNewJobValues(e.target.value, "description")
+          }
         />
         <div className="date-time-picker">
           <span>Pick date and time</span>
