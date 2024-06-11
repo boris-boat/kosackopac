@@ -52,6 +52,7 @@ export const Jobs = ({ user, setUser }) => {
       setUser((prev) => ({ ...prev, jobs: [...prev.jobs, data[0]] }));
     }
     console.log(error && error);
+    setNewJobData(undefined);
   };
 
   const handleViewEditJob = async (focusedJobId: string) => {
@@ -84,7 +85,7 @@ export const Jobs = ({ user, setUser }) => {
           key={job.id}
           onClick={() => handleViewEditJob(job.id)}
         >
-          {job.description}
+          {job.description ?? job.title}
         </div>
       ))}
       <button className="job" onClick={() => setAddJobModalOpen(true)}>
@@ -102,6 +103,7 @@ export const Jobs = ({ user, setUser }) => {
           onSlInput={(e) =>
             setNewJobData((prev) => ({ ...prev, customer_id: e.target.value }))
           }
+          value={newJobData?.customer_id ?? undefined}
         >
           {customers &&
             customers.map((customer) => {
@@ -117,6 +119,7 @@ export const Jobs = ({ user, setUser }) => {
           label="Title"
           clearable
           onSlInput={(e) => handleSetNewJobValues(e.target.value, "title")}
+          value={newJobData?.title ?? ""}
         />
         <SlInput
           label="Description"
@@ -124,12 +127,13 @@ export const Jobs = ({ user, setUser }) => {
           onSlInput={(e) =>
             handleSetNewJobValues(e.target.value, "description")
           }
+          value={newJobData?.description ?? ""}
         />
         <div className="date-time-picker">
           <span>Pick date and time</span>
           <DatePicker
             className="custom-datepicker"
-            selected={date}
+            selected={newJobData.scheduledDate ?? date}
             onChange={(date) => {
               setNewJobData((prev) => ({
                 ...prev,
