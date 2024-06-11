@@ -36,9 +36,9 @@ export const Home = () => {
       case "HOME":
         return <HomeContent user={user} />;
       case "JOBS":
-        return <Jobs user={user} />;
+        return <Jobs user={user} setUser={setUser} />;
       case "CUSTOMERS":
-        return <Customers user={user} />;
+        return <Customers user={user} setUser={setUser} />;
       default:
         return null;
     }

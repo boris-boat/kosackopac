@@ -7,7 +7,7 @@ import {
 } from "@shoelace-style/shoelace/dist/react/index.js";
 
 import "./Customers.styles.css";
-export const Customers = ({ user }) => {
+export const Customers = ({ user, setUser }) => {
   const [customers, setCustomers] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [newCustomerData, setNewCustomerData] = useState({});
@@ -27,20 +27,25 @@ export const Customers = ({ user }) => {
     setNewCustomerData((prev) => ({ ...prev, [label]: value }));
   };
 
-  const handleSubmit = async () => {
-    const { data, error } = await supabase.from("customers").insert([
-      {
-        registeredUsers_id: user.id,
-        name: newCustomerData.name,
-        phone: newCustomerData.phone,
-        address: newCustomerData.address,
-      },
-    ]);
+  const handleAddCustomer = async () => {
+    const { data, error } = await supabase
+      .from("customers")
+      .insert([
+        {
+          registeredUsers_id: user.id,
+          name: newCustomerData.name,
+          phone: newCustomerData.phone,
+          address: newCustomerData.address,
+        },
+      ])
+      .select();
+    if (!error) {
+      setCustomers((prev) => [...prev, data[0]]);
+    }
   };
 
   return (
     <div className="all-customers">
-      <pre>{newCustomerData.name}</pre>
       {customers.map((customer) => (
         <div className="customer" key={customer.id}>
           {customer.name}
@@ -79,7 +84,7 @@ export const Customers = ({ user }) => {
             slot="footer"
             variant="success"
             onClick={() => {
-              handleSubmit();
+              handleAddCustomer();
               setDialogOpen(false);
             }}
           >

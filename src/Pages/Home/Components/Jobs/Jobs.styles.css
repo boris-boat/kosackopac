@@ -25,3 +25,8 @@
   display: flex;
   justify-content: space-around;
 }
+.edit-job-input::part(base),
+.edit-job-input::part(combobox) {
+  opacity: 1;
+  background-color: white;
+}
