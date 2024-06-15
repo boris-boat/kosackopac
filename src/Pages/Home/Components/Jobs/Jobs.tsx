@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./Jobs.styles.css";
 import moment from "moment";
 import {
@@ -10,10 +10,12 @@ import {
 } from "@shoelace-style/shoelace/dist/react/index.js";
 import { supabase } from "../../../../Utils/database";
 import DatePicker from "react-datepicker";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addNewJob, deleteJob } from "../../../../redux/slices/jobSlice";
 export const Jobs = ({ setUser }) => {
   const userData = useSelector((state) => state.userData.data);
   const customers = useSelector((state) => state.customersData.data);
+  const dispatch = useDispatch();
 
   const [addJobModalOpen, setAddJobModalOpen] = useState(false);
   const [newJobData, setNewJobData] = useState({});
@@ -28,24 +30,9 @@ export const Jobs = ({ setUser }) => {
 
   const handleSubmitCreateNewJob = async () => {
     const parsedDate = moment(newJobData.scheduledDate);
-    const { data, error } = await supabase
-      .from("jobs")
-      .insert([
-        {
-          title: newJobData.title,
-          description: newJobData.description,
-          customer_id: newJobData.customer_id,
-          registeredUser_id: user.id,
-          scheduledDate: parsedDate,
-          status: "pending",
-        },
-      ])
-      .select();
-    if (!error) {
-      setUser((prev) => ({ ...prev, jobs: [...prev.jobs, data[0]] }));
-    }
-    console.log(error && error);
-    setNewJobData(undefined);
+
+    dispatch(addNewJob({ id: userData.id, parsedDate, ...newJobData }));
+    setNewJobData({});
   };
 
   const handleViewEditJob = async (focusedJobId: string) => {
@@ -57,10 +44,6 @@ export const Jobs = ({ setUser }) => {
       console.log(error);
       return;
     } else {
-      console.log(customers, data);
-      // console.log(
-      //   customers.find((customer) => customer.id === focusedJob[0].customer_id)
-      // );
       setFocusedJob(data[0]);
       setViewEditJobModal(true);
     }
@@ -70,6 +53,10 @@ export const Jobs = ({ setUser }) => {
     console.log(focusedJob);
   };
 
+  const handleDeleteJob = async (id) => {
+    dispatch(deleteJob(id));
+    setViewEditJobModal(false);
+  };
   return (
     <div className="all-jobs">
       {userData.jobs.map((job) => (
@@ -159,7 +146,7 @@ export const Jobs = ({ setUser }) => {
             Cancel
           </SlButton>
         </div>
-      </SlDialog>{" "}
+      </SlDialog>
       {focusedJob ? (
         <SlDialog
           label="Dialog"
@@ -252,6 +239,13 @@ export const Jobs = ({ setUser }) => {
             <SlButton
               slot="footer"
               variant="danger"
+              onClick={() => handleDeleteJob(focusedJob.id)}
+            >
+              Delete
+            </SlButton>
+            <SlButton
+              slot="footer"
+              variant="primary"
               onClick={() => setViewEditJobModal(false)}
             >
               Cancel

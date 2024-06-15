@@ -34,6 +34,15 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => (state.userData = action.payload),
+    addJobsToUser: (state, action) => {
+      state.data.jobs.push(action.payload);
+    },
+    removeJobFromUser: (state, action) => {
+      console.log(action.payload);
+      state.data.jobs = state.data.jobs.filter(
+        (job) => job.id !== action.payload
+      );
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -51,6 +60,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser, addJobsToUser, removeJobFromUser } = userSlice.actions;
 
 export default userSlice.reducer;

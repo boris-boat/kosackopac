@@ -6,6 +6,7 @@ import { Jobs } from "./Components/Jobs/Jobs";
 import { Customers } from "./Components/Customers/Customers";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "../../redux/slices/userSlice";
+import { fetchCustomers } from "../../redux/slices/customerSlice";
 
 export const Home = () => {
   const [currentPage, setCurrentPage] = useState("HOME");
@@ -17,7 +18,10 @@ export const Home = () => {
     if (userStatus === "idle") {
       dispatch(fetchUser());
     }
-  }, [dispatch, userStatus]);
+    if (userData) {
+      dispatch(fetchCustomers(userData.id));
+    }
+  }, [dispatch, userData, userStatus]);
 
   const getContent = (content) => {
     switch (content) {
