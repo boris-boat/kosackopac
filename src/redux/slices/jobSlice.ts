@@ -28,8 +28,7 @@ export const addNewJob = createAsyncThunk(
 export const deleteJob = createAsyncThunk(
   "jobs/deleteJob",
   async (id, { dispatch }) => {
-    console.log(id);
-    const { data, error } = await supabase.from("jobs").delete().eq("id", id);
+    await supabase.from("jobs").delete().eq("id", id);
 
     dispatch(removeJobFromUser(id));
   }

@@ -29,8 +29,7 @@ export const Jobs = ({ setUser }) => {
   };
 
   const handleSubmitCreateNewJob = async () => {
-    const parsedDate = moment(newJobData.scheduledDate);
-
+    const parsedDate = newJobData.scheduledDate;
     dispatch(addNewJob({ id: userData.id, parsedDate, ...newJobData }));
     setNewJobData({});
   };
@@ -44,13 +43,20 @@ export const Jobs = ({ setUser }) => {
       console.log(error);
       return;
     } else {
-      setFocusedJob(data[0]);
+      setFocusedJob({
+        ...data[0],
+        scheduledDate: new Date(data[0].scheduledDate),
+      });
       setViewEditJobModal(true);
     }
   };
 
   const handleUpdateJob = async () => {
-    console.log(focusedJob);
+    const { data, error } = await supabase
+      .from("jobs")
+      .update(focusedJob)
+      .eq("id", focusedJob.id)
+      .select();
   };
 
   const handleDeleteJob = async (id) => {
@@ -212,7 +218,6 @@ export const Jobs = ({ setUser }) => {
                   ...prev,
                   scheduledDate: date,
                 }));
-                setDate(date);
               }}
               showTimeSelect
               timeIntervals={15}

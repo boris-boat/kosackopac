@@ -38,7 +38,6 @@ export const userSlice = createSlice({
       state.data.jobs.push(action.payload);
     },
     removeJobFromUser: (state, action) => {
-      console.log(action.payload);
       state.data.jobs = state.data.jobs.filter(
         (job) => job.id !== action.payload
       );
