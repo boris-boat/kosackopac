@@ -10,28 +10,21 @@ import {
 } from "@shoelace-style/shoelace/dist/react/index.js";
 import { supabase } from "../../../../Utils/database";
 import DatePicker from "react-datepicker";
-export const Jobs = ({ user, setUser }) => {
+import { useSelector } from "react-redux";
+export const Jobs = ({ setUser }) => {
+  const userData = useSelector((state) => state.userData.data);
+  const customers = useSelector((state) => state.customersData.data);
+
   const [addJobModalOpen, setAddJobModalOpen] = useState(false);
   const [newJobData, setNewJobData] = useState({});
-  const [customers, setCustomers] = useState();
   const [date, setDate] = useState(new Date());
   const [viewEditJobModal, setViewEditJobModal] = useState(false);
   const [focusedJob, setFocusedJob] = useState(null);
   const [editJobMode, setEditJobMode] = useState(false);
+
   const handleSetNewJobValues = (value, label) => {
     setNewJobData((prev) => ({ ...prev, [label]: value }));
   };
-
-  useEffect(() => {
-    const getData = async () => {
-      const { data } = await supabase
-        .from("customers")
-        .select("*")
-        .eq("registeredUsers_id", user.id);
-      setCustomers(data);
-    };
-    getData();
-  }, []);
 
   const handleSubmitCreateNewJob = async () => {
     const parsedDate = moment(newJobData.scheduledDate);
@@ -79,7 +72,7 @@ export const Jobs = ({ user, setUser }) => {
 
   return (
     <div className="all-jobs">
-      {user.jobs.map((job) => (
+      {userData.jobs.map((job) => (
         <div
           className="job"
           key={job.id}

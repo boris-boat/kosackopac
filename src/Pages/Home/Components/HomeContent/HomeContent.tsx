@@ -12,7 +12,7 @@ export const HomeContent = ({ user }) => {
       <div className="homepage-all-jobs">
         {user.jobs.map((job) => (
           <div className="homepage-job" key={job.id}>
-            {job.description}
+            {job.description ?? job.title}
           </div>
         ))}
       </div>

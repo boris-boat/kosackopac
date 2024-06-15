@@ -7,20 +7,21 @@ import {
 } from "@shoelace-style/shoelace/dist/react/index.js";
 
 import "./Customers.styles.css";
+import {
+  addNewCustomer,
+  fetchCustomers,
+} from "../../../../redux/slices/customerSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 export const Customers = ({ user, setUser }) => {
-  const [customers, setCustomers] = useState([]);
+  const userId = useSelector((state) => state.userData.data.id);
+  const customers = useSelector((state) => state.customersData.data);
+  const dispatch = useDispatch();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [newCustomerData, setNewCustomerData] = useState({});
 
   useEffect(() => {
-    const getData = async () => {
-      const { data } = await supabase
-        .from("customers")
-        .select("*")
-        .eq("registeredUsers_id", user.id);
-      setCustomers(data);
-    };
-    getData();
+    dispatch(fetchCustomers(userId));
   }, []);
 
   const handleSetNewCustomerValues = (value: string, label: string) => {
@@ -28,20 +29,7 @@ export const Customers = ({ user, setUser }) => {
   };
 
   const handleAddCustomer = async () => {
-    const { data, error } = await supabase
-      .from("customers")
-      .insert([
-        {
-          registeredUsers_id: user.id,
-          name: newCustomerData.name,
-          phone: newCustomerData.phone,
-          address: newCustomerData.address,
-        },
-      ])
-      .select();
-    if (!error) {
-      setCustomers((prev) => [...prev, data[0]]);
-    }
+    dispatch(addNewCustomer({ id: user.id, ...newCustomerData }));
   };
 
   return (

@@ -2,43 +2,31 @@ import { useEffect, useState } from "react";
 import { Navbar } from "./Components/Navbar/Navbar";
 import "./Home.styles.css";
 import { HomeContent } from "./Components/HomeContent/HomeContent";
-import { supabase } from "../../Utils/database";
 import { Jobs } from "./Components/Jobs/Jobs";
 import { Customers } from "./Components/Customers/Customers";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser } from "../../redux/slices/userSlice";
 
 export const Home = () => {
   const [currentPage, setCurrentPage] = useState("HOME");
-  const [user, setUser] = useState();
+  const userData = useSelector((state) => state.userData.data);
+  const userStatus = useSelector((state) => state.userData.status);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    let getData = async () => {
-      const { data, error } = await supabase
-        .from("registeredUsers")
-        .select(
-          `
-            *,
-            jobs (
-              *,
-              customers (
-                *
-              )
-            )
-          `
-        )
-        .eq("id", "50939095-1094-4a64-b0b2-d37b31fc1fbd");
-      setUser(data[0]);
-    };
-    getData();
-  }, []);
+    if (userStatus === "idle") {
+      dispatch(fetchUser());
+    }
+  }, [dispatch, userStatus]);
 
   const getContent = (content) => {
     switch (content) {
       case "HOME":
-        return <HomeContent user={user} />;
+        return <HomeContent user={userData} />;
       case "JOBS":
-        return <Jobs user={user} setUser={setUser} />;
+        return <Jobs user={userData} />;
       case "CUSTOMERS":
-        return <Customers user={user} setUser={setUser} />;
+        return <Customers user={userData} />;
       default:
         return null;
     }
@@ -48,7 +36,9 @@ export const Home = () => {
       <div className="navbar-wrapper">
         <Navbar setCurrentPage={setCurrentPage} currentPage={currentPage} />
       </div>
-      {user && <div className="content-wrapper">{getContent(currentPage)}</div>}
+      {userData && (
+        <div className="content-wrapper">{getContent(currentPage)}</div>
+      )}
     </div>
   );
 };
