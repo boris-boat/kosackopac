@@ -11,7 +11,11 @@ import {
 import { supabase } from "../../../../Utils/database";
 import DatePicker from "react-datepicker";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewJob, deleteJob } from "../../../../redux/slices/jobSlice";
+import {
+  addNewJob,
+  deleteJob,
+  updateJob,
+} from "../../../../redux/slices/jobSlice";
 export const Jobs = ({ setUser }) => {
   const userData = useSelector((state) => state.userData.data);
   const customers = useSelector((state) => state.customersData.data);
@@ -52,11 +56,8 @@ export const Jobs = ({ setUser }) => {
   };
 
   const handleUpdateJob = async () => {
-    const { data, error } = await supabase
-      .from("jobs")
-      .update(focusedJob)
-      .eq("id", focusedJob.id)
-      .select();
+    dispatch(updateJob(focusedJob));
+    setEditJobMode(false);
   };
 
   const handleDeleteJob = async (id) => {

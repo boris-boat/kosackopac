@@ -42,6 +42,12 @@ export const userSlice = createSlice({
         (job) => job.id !== action.payload
       );
     },
+    updateUsersJobs: (state, action) => {
+      console.log(action.payload);
+      state.data.jobs = state.data.jobs.map((job) =>
+        job.id !== action.payload.id ? job : action.payload
+      );
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -59,6 +65,7 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUser, addJobsToUser, removeJobFromUser } = userSlice.actions;
+export const { setUser, addJobsToUser, removeJobFromUser, updateUsersJobs } =
+  userSlice.actions;
 
 export default userSlice.reducer;

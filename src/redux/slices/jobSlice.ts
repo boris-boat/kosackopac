@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { supabase } from "../../Utils/database";
-import { addJobsToUser, removeJobFromUser } from "./userSlice";
+import { addJobsToUser, removeJobFromUser, updateUsersJobs } from "./userSlice";
 const initialState = {
   data: [],
 };
@@ -31,6 +31,17 @@ export const deleteJob = createAsyncThunk(
     await supabase.from("jobs").delete().eq("id", id);
 
     dispatch(removeJobFromUser(id));
+  }
+);
+export const updateJob = createAsyncThunk(
+  "jobs/updateJob",
+  async (focusedJob, { dispatch }) => {
+    const { data, error } = await supabase
+      .from("jobs")
+      .update(focusedJob)
+      .eq("id", focusedJob.id)
+      .select();
+    dispatch(updateUsersJobs(data[0]));
   }
 );
 export const jobsSlice = createSlice({
