@@ -3,7 +3,6 @@ import {
   SlButton,
   SlDialog,
   SlInput,
-  SlSelect,
 } from "@shoelace-style/shoelace/dist/react/index.js";
 
 import "./Customers.styles.css";
@@ -16,7 +15,7 @@ import {
 } from "../../../../redux/slices/customerSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-export const Customers = ({ user, setUser }) => {
+export const Customers = ({ user }) => {
   const userId = useSelector((state) => state.userData.data.id);
   const customers = useSelector((state) => state.customersData.data);
   const focusedCustomer = useSelector(

@@ -9,6 +9,7 @@ export const HomeContent = ({ setCurrentPage }) => {
   const customers = useSelector((state) => state.customersData.data);
   const dispatch = useDispatch();
   const [sortedJobs, setSortedJobs] = useState([]);
+  const [filter, setFilter] = useState("today");
 
   useEffect(() => {
     let tmp2 = [...userData.jobs];
@@ -20,6 +21,25 @@ export const HomeContent = ({ setCurrentPage }) => {
     setSortedJobs(tmp);
   }, [userData.jobs]);
 
+  const filterFn = (job) => {
+    if (filter === "today") {
+      return (
+        new Date().toISOString().split("T")[0] ===
+        job.scheduledDate.split("T")[0]
+      );
+    }
+    if (filter === "tommorow") {
+      console.log(
+        moment(new Date()).add(1, "days").format("LL"),
+        moment(job.scheduledDate).format("LL")
+      );
+      return (
+        moment(new Date()).add(1, "days").format("LL") ===
+        moment(job.scheduledDate).format("LL")
+      );
+    }
+  };
+
   const handleSetFocusedJob = (job) => {
     setCurrentPage("JOBS");
     dispatch(
@@ -29,15 +49,26 @@ export const HomeContent = ({ setCurrentPage }) => {
       })
     );
   };
+
   return (
     <>
       <div className="home-content-filter">
-        <button>TODAY</button>
-        <button>TOMORROW</button>
+        <button
+          className={filter === "today" ? "selected" : ""}
+          onClick={() => setFilter("today")}
+        >
+          TODAY
+        </button>
+        <button
+          onClick={() => setFilter("tommorow")}
+          className={filter === "tommorow" ? "selected" : ""}
+        >
+          TOMORROW
+        </button>
         <div>DATEPICKER</div>
       </div>
       <div className="homepage-all-jobs">
-        {sortedJobs?.map((job) => {
+        {sortedJobs?.filter(filterFn).map((job) => {
           return (
             <div
               className="job"
