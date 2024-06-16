@@ -76,6 +76,7 @@ export const Jobs = () => {
   const handleDeleteJob = async (id) => {
     dispatch(deleteJob(id));
     setViewEditJobModal(false);
+    dispatch(resetFocusedJob());
   };
 
   const handleAddNewJobIn = () => {
@@ -196,7 +197,10 @@ export const Jobs = () => {
           <SlButton
             slot="footer"
             variant="danger"
-            onClick={() => setAddJobModalOpen(false)}
+            onClick={() => {
+              dispatch(resetFocusedJob());
+              setAddJobModalOpen(false);
+            }}
           >
             Cancel
           </SlButton>
@@ -321,6 +325,7 @@ export const Jobs = () => {
               variant="primary"
               onClick={() => {
                 setEditJobMode(false);
+                dispatch(resetFocusedJob());
                 setViewEditJobModal(false);
               }}
             >
