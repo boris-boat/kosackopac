@@ -10,9 +10,24 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  .homepage-job {
+  .job {
     padding: 10px;
     border-radius: 10px;
     box-shadow: inset 0px 0px 0px 1px yellowgreen;
+  }
+  .job-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    p {
+      margin: 3px;
+      font-weight: bold;
+    }
+    .second-row {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+    }
   }
 }

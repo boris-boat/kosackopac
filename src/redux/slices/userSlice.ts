@@ -43,7 +43,6 @@ export const userSlice = createSlice({
       );
     },
     updateUsersJobs: (state, action) => {
-      console.log(action.payload);
       state.data.jobs = state.data.jobs.map((job) =>
         job.id !== action.payload.id ? job : action.payload
       );

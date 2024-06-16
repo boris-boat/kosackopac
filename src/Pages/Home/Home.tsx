@@ -26,7 +26,7 @@ export const Home = () => {
   const getContent = (content) => {
     switch (content) {
       case "HOME":
-        return <HomeContent user={userData} />;
+        return <HomeContent setCurrentPage={setCurrentPage} />;
       case "JOBS":
         return <Jobs user={userData} />;
       case "CUSTOMERS":

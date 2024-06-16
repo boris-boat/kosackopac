@@ -2,7 +2,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { supabase } from "../../Utils/database";
 import { addJobsToUser, removeJobFromUser, updateUsersJobs } from "./userSlice";
 const initialState = {
-  data: [],
+  data: {
+    focusedJob: {},
+  },
 };
 export const addNewJob = createAsyncThunk(
   "jobs/addNewJob",
@@ -14,7 +16,7 @@ export const addNewJob = createAsyncThunk(
           title: newJobData.title,
           description: newJobData.description,
           customer_id: newJobData.customer_id,
-          registeredUser_id: newJobData.id,
+          registeredUser_id: newJobData.registeredUser_id,
           scheduledDate: newJobData.parsedDate,
           status: "pending",
         },
@@ -36,19 +38,30 @@ export const deleteJob = createAsyncThunk(
 export const updateJob = createAsyncThunk(
   "jobs/updateJob",
   async (focusedJob, { dispatch }) => {
+    console.log(focusedJob);
     const { data, error } = await supabase
       .from("jobs")
       .update(focusedJob)
       .eq("id", focusedJob.id)
       .select();
+    console.log(error ?? data);
     dispatch(updateUsersJobs(data[0]));
   }
 );
 export const jobsSlice = createSlice({
   name: "jobs",
   initialState,
-  reducers: {},
+  reducers: {
+    setFocusedJob: (state, action) => {
+      state.data.focusedJob = { ...state.data.focusedJob, ...action.payload };
+    },
+    resetFocusedJob: (state) => {
+      state.data.focusedJob = {};
+    },
+  },
   extraReducers: (builder) => {},
 });
+
+export const { setFocusedJob, resetFocusedJob } = jobsSlice.actions;
 
 export default jobsSlice.reducer;

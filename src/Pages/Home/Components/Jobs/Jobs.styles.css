@@ -4,9 +4,24 @@
   flex-direction: column;
   gap: 10px;
   .job {
-    padding: 5px;
+    padding: 10px;
     border-radius: 10px;
     box-shadow: inset 0px 0px 0px 1px yellowgreen;
+  }
+  .job-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    p {
+      margin: 3px;
+      font-weight: bold;
+    }
+    .second-row {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+    }
   }
 }
 .react-datepicker-wrapper {
@@ -29,4 +44,14 @@
 .edit-job-input::part(combobox) {
   opacity: 1;
   background-color: white;
+}
+.new-job-creator {
+  border: 1px solid red;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+
+  sl-button {
+    margin-top: 10px;
+  }
 }

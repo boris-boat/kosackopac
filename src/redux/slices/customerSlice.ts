@@ -3,6 +3,7 @@ import { supabase } from "../../Utils/database";
 
 const initialState = {
   data: [],
+  focusedCustomer: {},
 };
 
 export const fetchCustomers = createAsyncThunk(
@@ -39,11 +40,35 @@ export const addNewCustomer = createAsyncThunk(
   }
 );
 
+export const editCustomer = createAsyncThunk(
+  "customers/editCustomer",
+  async (editCustomerData) => {
+    const { data, error } = await supabase
+      .from("customers")
+      .update(editCustomerData)
+      .eq("id", editCustomerData.id)
+      .select();
+    console.log(error ?? data);
+    return data[0];
+  }
+);
+
+export const deleteCustomer = createAsyncThunk(
+  "customers/deleteCustomer",
+  async (id) => {
+    await supabase.from("customers").delete().eq("id", id);
+    return id;
+  }
+);
+
 export const customersSlice = createSlice({
   name: "customers",
   initialState,
   reducers: {
     setCustomers: (state, action) => (state.userData = action.payload),
+    setFocusedCustomer: (state, action) => {
+      state.focusedCustomer = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchCustomers.fulfilled, (state, action) => {
@@ -52,9 +77,19 @@ export const customersSlice = createSlice({
     builder.addCase(addNewCustomer.fulfilled, (state, action) => {
       state.data.push(action.payload);
     });
+    builder.addCase(editCustomer.fulfilled, (state, action) => {
+      state.data = state.data.map((customer) =>
+        customer.id !== action.payload.id ? customer : action.payload
+      );
+    });
+    builder.addCase(deleteCustomer.fulfilled, (state, action) => {
+      state.data = state.data.filter(
+        (customer) => customer.id !== action.payload
+      );
+    });
   },
 });
 
-export const { setCustomers } = customersSlice.actions;
+export const { setCustomers, setFocusedCustomer } = customersSlice.actions;
 
 export default customersSlice.reducer;
