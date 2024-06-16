@@ -29,10 +29,6 @@ export const HomeContent = ({ setCurrentPage }) => {
       );
     }
     if (filter === "tommorow") {
-      console.log(
-        moment(new Date()).add(1, "days").format("LL"),
-        moment(job.scheduledDate).format("LL")
-      );
       return (
         moment(new Date()).add(1, "days").format("LL") ===
         moment(job.scheduledDate).format("LL")
