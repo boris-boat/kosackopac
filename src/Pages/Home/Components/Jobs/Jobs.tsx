@@ -111,8 +111,9 @@ export const Jobs = () => {
             <div className="job-description">
               <p>
                 {
-                  customers?.find((customer) => customer.id === job.customer_id)
-                    .name
+                  customers?.find(
+                    (customer) => customer?.id === job?.customer_id
+                  )?.name
                 }
               </p>
               <div className="second-row">

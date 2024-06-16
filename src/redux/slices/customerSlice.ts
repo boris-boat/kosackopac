@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { supabase } from "../../Utils/database";
+import { fetchUser } from "./userSlice";
 
 const initialState = {
   data: [],
@@ -55,8 +56,9 @@ export const editCustomer = createAsyncThunk(
 
 export const deleteCustomer = createAsyncThunk(
   "customers/deleteCustomer",
-  async (id) => {
+  async (id, { dispatch }) => {
     await supabase.from("customers").delete().eq("id", id);
+    dispatch(fetchUser());
     return id;
   }
 );
