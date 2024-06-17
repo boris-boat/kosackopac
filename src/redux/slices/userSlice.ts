@@ -1,11 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { supabase } from "../../Utils/database";
+import { IInitialUserState } from "../types/userTypes";
 
-const initialState = {
-  data: null,
+const initialState:IInitialUserState = {
+  data: {
+    jobs:[]
+  },
   status: "idle",
-  error: null,
+  error: "",
+  userData:null
 };
+
 export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
   const { data, error } = await supabase
     .from("registeredUsers")

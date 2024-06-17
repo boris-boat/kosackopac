@@ -7,10 +7,11 @@ import { Customers } from "./Components/Customers/Customers";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "../../redux/slices/userSlice";
 import { fetchCustomers } from "../../redux/slices/customerSlice";
+import { IInitialUserState } from "../../redux/types/userTypes";
 
 export const Home = () => {
   const [currentPage, setCurrentPage] = useState("HOME");
-  const userData = useSelector((state) => state.userData.data);
+  const userData = useSelector((state:IInitialUserState) => state.userData.data);
   const userStatus = useSelector((state) => state.userData.status);
   const dispatch = useDispatch();
 
