@@ -14,14 +14,6 @@ export const Home = () => {
   const userData = useSelector(
     (state: IInitialUserState) => state.userData.data
   );
-  const userStatus = useSelector((state) => state.userData.status);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (userData) {
-      dispatch(fetchCustomers(userData.id));
-    }
-  }, [dispatch, userData, userStatus]);
 
   const getContent = (content) => {
     switch (content) {

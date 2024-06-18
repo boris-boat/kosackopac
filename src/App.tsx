@@ -13,7 +13,6 @@ import { useSelector } from "react-redux";
 moment.locale("sr");
 function App() {
   const userData = useSelector((state) => state.userData.userData);
-  console.log(userData);
   if (!userData) {
     return <Login />;
   }

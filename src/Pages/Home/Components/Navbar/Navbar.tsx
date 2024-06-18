@@ -6,9 +6,12 @@ import {
   SlDrawer,
 } from "@shoelace-style/shoelace/dist/react/index.js";
 import { supabase } from "../../../../Utils/database";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../../redux/slices/userSlice";
 
 export const Navbar = ({ currentPage, setCurrentPage }) => {
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
   return (
     <div className="navbar">
       <SlDrawer
@@ -52,6 +55,7 @@ export const Navbar = ({ currentPage, setCurrentPage }) => {
             if (error) {
               console.log(error);
             }
+            dispatch(setUser(null));
             setOpen(false);
           }}
         >
