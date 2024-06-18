@@ -111,16 +111,21 @@ export const Jobs = () => {
             onClick={() => handleViewEditJob(job.id)}
           >
             <div className="job-description">
-              <p>
-                {
-                  customers?.find(
-                    (customer) => customer?.id === job?.customer_id
-                  )?.name
-                }
-              </p>
+              <div className="first-row">
+                <span>
+                  {
+                    customers?.find(
+                      (customer) => customer?.id === job?.customer_id
+                    )?.name
+                  }
+                </span>
+                <span>{job.title}</span>
+              </div>
               <div className="second-row">
-                <span>{job.description ?? job.title}</span>
-                <span>{moment(job.scheduledDate).format("LLLL")}</span>
+                <span>{job.description}</span>
+                <span>
+                  {moment(job.scheduledDate).format("ddd DD.MM.YY HH:MM")}
+                </span>
               </div>
             </div>
           </div>
