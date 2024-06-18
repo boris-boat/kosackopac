@@ -9,9 +9,14 @@ import moment from "moment";
 import "moment/dist/locale/sr";
 import Login from "./Pages/Login/Login";
 import { Home } from "./Pages/Home/Home";
+import { useSelector } from "react-redux";
 moment.locale("sr");
 function App() {
-  // return <Login />;
+  const userData = useSelector((state) => state.userData.userData);
+  console.log(userData);
+  if (!userData) {
+    return <Login />;
+  }
   return <Home />;
 }
 

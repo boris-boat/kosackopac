@@ -5,13 +5,14 @@ import {
   SlIconButton,
   SlDrawer,
 } from "@shoelace-style/shoelace/dist/react/index.js";
+import { supabase } from "../../../../Utils/database";
 
 export const Navbar = ({ currentPage, setCurrentPage }) => {
   const [open, setOpen] = useState(false);
   return (
     <div className="navbar">
       <SlDrawer
-        label="Drawer"
+        label="Options"
         placement="start"
         open={open}
         onSlAfterHide={() => setOpen(false)}
@@ -42,6 +43,20 @@ export const Navbar = ({ currentPage, setCurrentPage }) => {
             JOBS
           </SlButton>
         </div>
+
+        <SlButton
+          slot="footer"
+          variant="danger"
+          onClick={async () => {
+            const { error } = await supabase.auth.signOut();
+            if (error) {
+              console.log(error);
+            }
+            setOpen(false);
+          }}
+        >
+          Logout
+        </SlButton>
         <SlButton
           slot="footer"
           variant="primary"

@@ -3,23 +3,25 @@ import "./HomeContent.styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { setFocusedJob } from "../../../../redux/slices/jobSlice";
+import { fetchCustomers } from "../../../../redux/slices/customerSlice";
 
 export const HomeContent = ({ setCurrentPage }) => {
   const userData = useSelector((state) => state.userData.data);
+  const userJobs = useSelector((state) => state.jobsData.jobs);
   const customers = useSelector((state) => state.customersData.data);
   const dispatch = useDispatch();
   const [sortedJobs, setSortedJobs] = useState([]);
   const [filter, setFilter] = useState("today");
 
   useEffect(() => {
-    let tmp2 = [...userData.jobs];
+    let tmp2 = [...(userJobs ?? [])];
     let tmp = tmp2?.sort(
       (a, b) =>
         new Date(a.scheduledDate).getTime() -
         new Date(b.scheduledDate).getTime()
     );
     setSortedJobs(tmp);
-  }, [userData.jobs]);
+  }, [userJobs]);
 
   const filterFn = (job) => {
     if (filter === "today") {

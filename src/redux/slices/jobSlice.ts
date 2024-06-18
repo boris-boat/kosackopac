@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { supabase } from "../../Utils/database";
-import { addJobsToUser, removeJobFromUser, updateUsersJobs } from "./userSlice";
 const initialState = {
   data: {
     focusedJob: {},
@@ -8,7 +7,7 @@ const initialState = {
 };
 export const addNewJob = createAsyncThunk(
   "jobs/addNewJob",
-  async (newJobData, { dispatch }) => {
+  async (newJobData) => {
     const { data, error } = await supabase
       .from("jobs")
       .insert([
@@ -22,32 +21,33 @@ export const addNewJob = createAsyncThunk(
         },
       ])
       .select();
-    dispatch(addJobsToUser(data[0]));
-
+    console.log(data[0]);
     return data[0];
   }
 );
-export const deleteJob = createAsyncThunk(
-  "jobs/deleteJob",
-  async (id, { dispatch }) => {
-    await supabase.from("jobs").delete().eq("id", id);
-
-    dispatch(removeJobFromUser(id));
-  }
-);
+export const deleteJob = createAsyncThunk("jobs/deleteJob", async (id) => {
+  await supabase.from("jobs").delete().eq("id", id);
+  return id;
+});
 export const updateJob = createAsyncThunk(
   "jobs/updateJob",
-  async (focusedJob, { dispatch }) => {
-    console.log(focusedJob);
+  async (focusedJob) => {
     const { data, error } = await supabase
       .from("jobs")
       .update(focusedJob)
       .eq("id", focusedJob.id)
       .select();
-    console.log(error ?? data);
-    dispatch(updateUsersJobs(data[0]));
+    return data[0];
   }
 );
+export const fetchJobs = createAsyncThunk("jobs/fetchJobs", async (id) => {
+  const { data } = await supabase
+    .from("jobs")
+    .select("*")
+    .eq("registeredUser_id", id);
+  return data;
+  console.log(data);
+});
 export const jobsSlice = createSlice({
   name: "jobs",
   initialState,
@@ -59,7 +59,23 @@ export const jobsSlice = createSlice({
       state.data.focusedJob = {};
     },
   },
-  extraReducers: (builder) => {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchJobs.fulfilled, (state, action) => {
+        state.jobs = action.payload;
+      })
+      .addCase(addNewJob.fulfilled, (state, action) => {
+        state.jobs.push(action.payload);
+      })
+      .addCase(deleteJob.fulfilled, (state, action) => {
+        state.jobs = state.jobs.filter((job) => job.id !== action.payload);
+      })
+      .addCase(updateJob.fulfilled, (state, action) => {
+        state.jobs = state.jobs.map((job) =>
+          job.id !== action.payload.id ? job : action.payload
+        );
+      });
+  },
 });
 
 export const { setFocusedJob, resetFocusedJob } = jobsSlice.actions;

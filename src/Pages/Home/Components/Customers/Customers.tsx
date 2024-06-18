@@ -16,7 +16,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 export const Customers = ({ user }) => {
-  const userId = useSelector((state) => state.userData.data.id);
+  const userId = useSelector((state) => state.userData.userData.id);
   const customers = useSelector((state) => state.customersData.data);
   const focusedCustomer = useSelector(
     (state) => state.customersData.focusedCustomer

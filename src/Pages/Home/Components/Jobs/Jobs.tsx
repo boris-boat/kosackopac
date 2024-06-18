@@ -21,7 +21,9 @@ import {
 import { daysAheadOptions } from "../../../../Utils/daysAheadOptions";
 
 export const Jobs = () => {
-  const userData = useSelector((state) => state.userData.data);
+  const userData = useSelector((state) => state.userData.userData);
+  const userJobs = useSelector((state) => state.jobsData.jobs);
+
   const customers = useSelector((state) => state.customersData.data);
   const focusedJob = useSelector((state) => state.jobsData.data.focusedJob);
   const dispatch = useDispatch();
@@ -90,14 +92,14 @@ export const Jobs = () => {
   };
 
   useEffect(() => {
-    let tmp2 = [...userData.jobs];
+    let tmp2 = [...(userJobs ?? [])];
     let tmp = tmp2?.sort(
       (a, b) =>
         new Date(a.scheduledDate).getTime() -
         new Date(b.scheduledDate).getTime()
     );
     setSortedJobs(tmp);
-  }, [userData.jobs]);
+  }, [userJobs]);
 
   return (
     <div className="all-jobs">

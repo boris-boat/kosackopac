@@ -11,14 +11,13 @@ import { IInitialUserState } from "../../redux/types/userTypes";
 
 export const Home = () => {
   const [currentPage, setCurrentPage] = useState("HOME");
-  const userData = useSelector((state:IInitialUserState) => state.userData.data);
+  const userData = useSelector(
+    (state: IInitialUserState) => state.userData.data
+  );
   const userStatus = useSelector((state) => state.userData.status);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (userStatus === "idle") {
-      dispatch(fetchUser());
-    }
     if (userData) {
       dispatch(fetchCustomers(userData.id));
     }

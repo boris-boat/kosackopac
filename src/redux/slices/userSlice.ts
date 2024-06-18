@@ -2,43 +2,46 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { supabase } from "../../Utils/database";
 import { IInitialUserState } from "../types/userTypes";
 
-const initialState:IInitialUserState = {
+const initialState: IInitialUserState = {
   data: {
-    jobs:[]
+    jobs: [],
   },
   status: "idle",
   error: "",
-  userData:null
+  userData: null,
 };
 
-export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
+export const fetchUser = createAsyncThunk("user/fetchUser", async (userId) => {
   const { data, error } = await supabase
-    .from("registeredUsers")
-    .select(
-      `
-            *,
-            jobs (
-              *,
-              customers (
-                *
-              )
-            )
-          `
-    )
-    .eq("id", "50939095-1094-4a64-b0b2-d37b31fc1fbd");
+    .from("auth.users")
+    .select("*")
+    .eq("id", userId)
+    .single();
+
+  if (error) {
+    throw error;
+  }
 
   if (error) {
     throw new Error(error.message);
   }
-
+  console.log(data);
   return data[0];
+});
+
+export const loginUser = createAsyncThunk("user/loginUser", async () => {
+  const { data } = await supabase.auth.getSession();
+  console.log(data);
+  return data.user;
 });
 
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser: (state, action) => (state.userData = action.payload),
+    setUser: (state, action) => {
+      state.userData = action.payload;
+    },
     addJobsToUser: (state, action) => {
       state.data.jobs.push(action.payload);
     },
@@ -65,6 +68,9 @@ export const userSlice = createSlice({
       .addCase(fetchUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.userData = action.payload;
       });
   },
 });

@@ -24,7 +24,6 @@ export const fetchCustomers = createAsyncThunk(
 export const addNewCustomer = createAsyncThunk(
   "customers/addNewCustomer",
   async (newCustomerData) => {
-    console.log(newCustomerData);
     const { data, error } = await supabase
       .from("customers")
       .insert([
@@ -49,7 +48,6 @@ export const editCustomer = createAsyncThunk(
       .update(editCustomerData)
       .eq("id", editCustomerData.id)
       .select();
-    console.log(error ?? data);
     return data[0];
   }
 );
