@@ -70,9 +70,6 @@ export const customersSlice = createSlice({
     setFocusedCustomer: (state, action) => {
       state.focusedCustomer = action.payload;
     },
-    setFocusedCustomer: (state, action) => {
-      state.focusedCustomer = action.payload;
-    },
     searchCustomersFilter: (state, action) => {
       state.filter = action.payload;
     },
