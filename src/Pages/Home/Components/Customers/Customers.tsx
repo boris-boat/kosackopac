@@ -16,7 +16,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 export const Customers = ({ user }) => {
-  const userId = useSelector((state) => state.userData.userData.id);
+  const customerFilter = useSelector((state) => state.customersData.filter);
+
   const customers = useSelector((state) => state.customersData.data);
   const focusedCustomer = useSelector(
     (state) => state.customersData.focusedCustomer
@@ -28,10 +29,6 @@ export const Customers = ({ user }) => {
     focusedCustomer.id ? { ...focusedCustomer } : {}
   );
   const [viewEditCustomerModal, setViewEditCustomerModal] = useState(false);
-
-  useEffect(() => {
-    dispatch(fetchCustomers(userId));
-  }, []);
 
   const handleSetNewCustomerValues = (value: string, label: string) => {
     setNewCustomerData((prev) => ({ ...prev, [label]: value }));
@@ -58,18 +55,24 @@ export const Customers = ({ user }) => {
 
   return (
     <div className="all-customers">
-      {customers.map((customer) => (
-        <div
-          className="customer"
-          key={customer?.id}
-          onClick={() => {
-            dispatch(setFocusedCustomer(customer));
-            setViewEditCustomerModal(true);
-          }}
-        >
-          {customer?.name}
-        </div>
-      ))}
+      {customers
+        .filter((customer) => {
+          if (customerFilter) {
+            return customer.name.toLowerCase().includes(customerFilter);
+          } else return customer;
+        })
+        .map((customer) => (
+          <div
+            className="customer"
+            key={customer?.id}
+            onClick={() => {
+              dispatch(setFocusedCustomer(customer));
+              setViewEditCustomerModal(true);
+            }}
+          >
+            {customer?.name}
+          </div>
+        ))}
       <SlDialog
         label="Add new customer"
         open={dialogOpen}
@@ -106,6 +109,11 @@ export const Customers = ({ user }) => {
               handleAddCustomer();
               setDialogOpen(false);
             }}
+            disabled={
+              !newCustomerData.name ||
+              !newCustomerData.address ||
+              !newCustomerData.phone
+            }
           >
             Confirm
           </SlButton>

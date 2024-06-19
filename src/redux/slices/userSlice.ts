@@ -55,6 +55,13 @@ export const userSlice = createSlice({
         job.id !== action.payload.id ? job : action.payload
       );
     },
+    searchJobFilter: (state, action) => {
+      state.data.jobs = state.data.jobs.filter(
+        (job) =>
+          job.title.toLowerCase().includes(action.payload) ||
+          job.description.toLowerCase().includes(action.payload)
+      );
+    },
   },
   extraReducers: (builder) => {
     builder

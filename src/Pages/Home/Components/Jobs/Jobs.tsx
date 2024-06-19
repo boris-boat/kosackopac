@@ -23,6 +23,7 @@ import { daysAheadOptions } from "../../../../Utils/daysAheadOptions";
 export const Jobs = () => {
   const userData = useSelector((state) => state.userData.userData);
   const userJobs = useSelector((state) => state.jobsData.jobs);
+  const jobsFilter = useSelector((state) => state.jobsData.filter);
 
   const customers = useSelector((state) => state.customersData.data);
   const focusedJob = useSelector((state) => state.jobsData.data.focusedJob);
@@ -91,6 +92,13 @@ export const Jobs = () => {
     setViewEditJobModal(false);
   };
 
+  const filterFn = (job) => {
+    return (
+      job.title.toLowerCase().includes(jobsFilter.toLowerCase()) ||
+      job.description.toLowerCase().includes(jobsFilter.toLowerCase())
+    );
+  };
+
   useEffect(() => {
     let tmp2 = [...(userJobs ?? [])];
     let tmp = tmp2?.sort(
@@ -103,7 +111,7 @@ export const Jobs = () => {
 
   return (
     <div className="all-jobs">
-      {sortedJobs.map((job) => {
+      {sortedJobs?.filter(filterFn)?.map((job) => {
         return (
           <div
             className="job"
@@ -199,6 +207,11 @@ export const Jobs = () => {
               handleSubmitCreateNewJob();
               setAddJobModalOpen(false);
             }}
+            disabled={
+              !newJobData.description ||
+              !newJobData.title ||
+              !newJobData.customer_id
+            }
           >
             Confirm
           </SlButton>

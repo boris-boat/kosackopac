@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { supabase } from "../../Utils/database";
 import { fetchUser } from "./userSlice";
+import { toast } from "react-toastify";
 
 const initialState = {
   data: [],
@@ -69,20 +70,38 @@ export const customersSlice = createSlice({
     setFocusedCustomer: (state, action) => {
       state.focusedCustomer = action.payload;
     },
+    setFocusedCustomer: (state, action) => {
+      state.focusedCustomer = action.payload;
+    },
+    searchCustomersFilter: (state, action) => {
+      state.filter = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchCustomers.fulfilled, (state, action) => {
       state.data = action.payload;
     });
     builder.addCase(addNewCustomer.fulfilled, (state, action) => {
+      toast("Customer added", {
+        position: "bottom-center",
+        type: "success",
+      });
       state.data.push(action.payload);
     });
     builder.addCase(editCustomer.fulfilled, (state, action) => {
+      toast("Customer edited", {
+        position: "bottom-center",
+        type: "success",
+      });
       state.data = state.data.map((customer) =>
         customer.id !== action.payload.id ? customer : action.payload
       );
     });
     builder.addCase(deleteCustomer.fulfilled, (state, action) => {
+      toast("Customer deleted", {
+        position: "bottom-center",
+        type: "success",
+      });
       state.data = state.data.filter(
         (customer) => customer.id !== action.payload
       );
@@ -90,6 +109,7 @@ export const customersSlice = createSlice({
   },
 });
 
-export const { setCustomers, setFocusedCustomer } = customersSlice.actions;
+export const { setCustomers, setFocusedCustomer, searchCustomersFilter } =
+  customersSlice.actions;
 
 export default customersSlice.reducer;

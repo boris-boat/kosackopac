@@ -1,9 +1,23 @@
 .home-content-filter {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-evenly;
   height: 10%;
   box-shadow: inset 0px 0px 0px 1px green;
+  .input-filter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 33%;
+    input {
+      font-size: 24px;
+      height: 40%;
+      width: 80%;
+      border-radius: 5px;
+      text-align: center;
+    }
+  }
 }
 .homepage-all-jobs {
   padding: 20px;

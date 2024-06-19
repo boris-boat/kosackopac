@@ -24,6 +24,10 @@ export const HomeContent = ({ setCurrentPage }) => {
   }, [userJobs]);
 
   const filterFn = (job) => {
+    const customer = customers?.find(
+      (customer) => customer.id === job.customer_id
+    );
+    const customerName = customer ? customer.name.toLowerCase() : "";
     if (filter === "today") {
       return (
         new Date().toISOString().split("T")[0] ===
@@ -34,6 +38,12 @@ export const HomeContent = ({ setCurrentPage }) => {
       return (
         moment(new Date()).add(1, "days").format("LL") ===
         moment(job.scheduledDate).format("LL")
+      );
+    } else {
+      return (
+        job.title.toLowerCase().includes(filter.toLowerCase()) ||
+        job.description.toLowerCase().includes(filter.toLowerCase()) ||
+        customerName.includes(filter.toLowerCase())
       );
     }
   };
@@ -63,7 +73,16 @@ export const HomeContent = ({ setCurrentPage }) => {
         >
           TOMORROW
         </button>
-        <div>DATEPICKER</div>
+        <div className="input-filter">
+          <input
+            type="text"
+            placeholder="Search"
+            onChange={(e) => setFilter(e.target.value)}
+            onBlur={(event) => {
+              event.target.value = "";
+            }}
+          />
+        </div>
       </div>
       <div className="homepage-all-jobs">
         {sortedJobs?.filter(filterFn).map((job) => {

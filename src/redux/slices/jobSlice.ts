@@ -1,9 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { supabase } from "../../Utils/database";
+import { toast } from "react-toastify";
 const initialState = {
   data: {
     focusedJob: {},
   },
+  filter: "",
 };
 export const addNewJob = createAsyncThunk(
   "jobs/addNewJob",
@@ -58,6 +60,9 @@ export const jobsSlice = createSlice({
     resetFocusedJob: (state) => {
       state.data.focusedJob = {};
     },
+    searchJobFilter: (state, action) => {
+      state.filter = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -65,12 +70,24 @@ export const jobsSlice = createSlice({
         state.jobs = action.payload;
       })
       .addCase(addNewJob.fulfilled, (state, action) => {
+        toast("Job added", {
+          position: "bottom-center",
+          type: "success",
+        });
         state.jobs.push(action.payload);
       })
       .addCase(deleteJob.fulfilled, (state, action) => {
         state.jobs = state.jobs.filter((job) => job.id !== action.payload);
+        toast("Job deleted", {
+          position: "bottom-center",
+          type: "success",
+        });
       })
       .addCase(updateJob.fulfilled, (state, action) => {
+        toast("Job updated", {
+          position: "bottom-center",
+          type: "success",
+        });
         state.jobs = state.jobs.map((job) =>
           job.id !== action.payload.id ? job : action.payload
         );
@@ -78,6 +95,7 @@ export const jobsSlice = createSlice({
   },
 });
 
-export const { setFocusedJob, resetFocusedJob } = jobsSlice.actions;
+export const { setFocusedJob, resetFocusedJob, searchJobFilter } =
+  jobsSlice.actions;
 
 export default jobsSlice.reducer;

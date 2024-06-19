@@ -8,10 +8,18 @@ import {
 import { supabase } from "../../../../Utils/database";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../../redux/slices/userSlice";
+import { searchCustomersFilter } from "../../../../redux/slices/customerSlice";
+import { searchJobFilter } from "../../../../redux/slices/jobSlice";
 
 export const Navbar = ({ currentPage, setCurrentPage }) => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+  const handleCustomersSearch = (filter) => {
+    dispatch(searchCustomersFilter(filter));
+  };
+  const handleJobsSearch = (filter) => {
+    dispatch(searchJobFilter(filter));
+  };
   return (
     <div className="navbar">
       <SlDrawer
@@ -77,7 +85,31 @@ export const Navbar = ({ currentPage, setCurrentPage }) => {
           style={{ fontSize: "2rem" }}
         />
       </div>
-      <div className="current-location">{currentPage}</div>
+      <div className="top-bar">
+        <div className="current-location">{currentPage}</div>
+        <div className="search">
+          {currentPage === "JOBS" && (
+            <input
+              type="text"
+              placeholder="Search"
+              className="jobs-search"
+              onChange={(e) => {
+                handleJobsSearch(e.target.value);
+              }}
+            />
+          )}
+          {currentPage === "CUSTOMERS" && (
+            <input
+              type="text"
+              placeholder="Search"
+              className="customers-search"
+              onChange={(e) => {
+                handleCustomersSearch(e.target.value);
+              }}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };

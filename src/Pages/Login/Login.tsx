@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { loginUser, setUser } from "../../redux/slices/userSlice";
 import { fetchJobs } from "../../redux/slices/jobSlice";
 import { fetchCustomers } from "../../redux/slices/customerSlice";
+import { toast } from "react-toastify";
 function Login() {
   // State variables to store user input
   const [email, setEmail] = useState("");
@@ -30,6 +31,13 @@ function Login() {
         password,
       })
       .then((data) => {
+        if (data.error) {
+          toast("Invalid username/password", {
+            position: "bottom-center",
+            type: "error",
+          });
+          return;
+        }
         dispatch(setUser(data.data.user));
         dispatch(fetchJobs(data.data.user.id));
         dispatch(fetchCustomers(data.data.user.id));
