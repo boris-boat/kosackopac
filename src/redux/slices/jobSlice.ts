@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { supabase } from "../../Utils/database";
 import { toast } from "react-toastify";
 const initialState = {
+  jobs: [],
   data: {
     focusedJob: {},
   },

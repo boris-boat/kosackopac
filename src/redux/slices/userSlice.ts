@@ -1,11 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { supabase } from "../../Utils/database";
-import { IInitialUserState } from "../types/userTypes";
+import { IInitialUserState, IUser } from "../types/userTypes";
 
 const initialState: IInitialUserState = {
-  data: {
-    jobs: [],
-  },
   status: "idle",
   error: "",
   userData: null,
@@ -31,8 +28,7 @@ export const fetchUser = createAsyncThunk("user/fetchUser", async (userId) => {
 
 export const loginUser = createAsyncThunk("user/loginUser", async () => {
   const { data } = await supabase.auth.getSession();
-  console.log(data);
-  return data.user;
+  return data.user as IUser;
 });
 
 export const userSlice = createSlice({
@@ -41,26 +37,6 @@ export const userSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       state.userData = action.payload;
-    },
-    addJobsToUser: (state, action) => {
-      state.data.jobs.push(action.payload);
-    },
-    removeJobFromUser: (state, action) => {
-      state.data.jobs = state.data.jobs.filter(
-        (job) => job.id !== action.payload
-      );
-    },
-    updateUsersJobs: (state, action) => {
-      state.data.jobs = state.data.jobs.map((job) =>
-        job.id !== action.payload.id ? job : action.payload
-      );
-    },
-    searchJobFilter: (state, action) => {
-      state.data.jobs = state.data.jobs.filter(
-        (job) =>
-          job.title.toLowerCase().includes(action.payload) ||
-          job.description.toLowerCase().includes(action.payload)
-      );
     },
   },
   extraReducers: (builder) => {
@@ -82,7 +58,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUser, addJobsToUser, removeJobFromUser, updateUsersJobs } =
-  userSlice.actions;
+export const { setUser } = userSlice.actions;
 
 export default userSlice.reducer;

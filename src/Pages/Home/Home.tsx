@@ -1,26 +1,26 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Navbar } from "./Components/Navbar/Navbar";
 import "./Home.styles.css";
 import { HomeContent } from "./Components/HomeContent/HomeContent";
 import { Jobs } from "./Components/Jobs/Jobs";
 import { Customers } from "./Components/Customers/Customers";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUser } from "../../redux/slices/userSlice";
-import { fetchCustomers } from "../../redux/slices/customerSlice";
-import { IInitialUserState } from "../../redux/types/userTypes";
+import { useSelector } from "react-redux";
+import { IInitialUserState, IUser } from "../../redux/types/userTypes";
 
 export const Home = () => {
-  const [currentPage, setCurrentPage] = useState("HOME");
-  const userData = useSelector(
-    (state: IInitialUserState) => state.userData.data
+  const [currentPage, setCurrentPage] = useState<"HOME" | "JOBS" | "CUSTOMERS">(
+    "HOME"
+  );
+  const userData: IUser = useSelector(
+    (state: IInitialUserState) => state.userData
   );
 
-  const getContent = (content) => {
+  const getContent = (content: "HOME" | "JOBS" | "CUSTOMERS") => {
     switch (content) {
       case "HOME":
         return <HomeContent setCurrentPage={setCurrentPage} />;
       case "JOBS":
-        return <Jobs user={userData} />;
+        return <Jobs />;
       case "CUSTOMERS":
         return <Customers user={userData} />;
       default:
@@ -30,7 +30,14 @@ export const Home = () => {
   return (
     <div className="home-page">
       <div className="navbar-wrapper">
-        <Navbar setCurrentPage={setCurrentPage} currentPage={currentPage} />
+        <Navbar
+          setCurrentPage={
+            setCurrentPage as React.Dispatch<
+              React.SetStateAction<"HOME" | "JOBS" | "CUSTOMERS">
+            >
+          }
+          currentPage={currentPage}
+        />
       </div>
       {userData && (
         <div className="content-wrapper">{getContent(currentPage)}</div>

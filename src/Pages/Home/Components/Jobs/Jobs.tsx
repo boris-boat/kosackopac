@@ -10,6 +10,7 @@ import {
 } from "@shoelace-style/shoelace/dist/react/index.js";
 import { supabase } from "../../../../Utils/database";
 import DatePicker from "react-datepicker";
+import type SlInputElement from "@shoelace-style/shoelace/dist/components/input/input";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addNewJob,
@@ -19,19 +20,39 @@ import {
   updateJob,
 } from "../../../../redux/slices/jobSlice";
 import { daysAheadOptions } from "../../../../Utils/daysAheadOptions";
+import { IReduxStoreRootState } from "../../../../redux/types/storeType";
+import { IJob } from "../../../../redux/types/jobsTypes";
 
 export const Jobs = () => {
-  const userData = useSelector((state) => state.userData.userData);
-  const userJobs = useSelector((state) => state.jobsData.jobs);
-  const jobsFilter = useSelector((state) => state.jobsData.filter);
+  const userData = useSelector(
+    (state: IReduxStoreRootState) => state.userData.userData
+  );
+  const userJobs = useSelector(
+    (state: IReduxStoreRootState) => state.jobsData.jobs
+  );
+  const jobsFilter = useSelector(
+    (state: IReduxStoreRootState) => state.jobsData.filter
+  );
 
-  const customers = useSelector((state) => state.customersData.data);
-  const focusedJob = useSelector((state) => state.jobsData.data.focusedJob);
+  const customers = useSelector(
+    (state: IReduxStoreRootState) => state.customersData.data
+  );
+  const focusedJob = useSelector(
+    (state: IReduxStoreRootState) => state.jobsData.data.focusedJob
+  );
+  const emptyNewJobData = {
+    customer_id: "",
+    title: "",
+    description: "",
+    dateScheduled: "",
+  };
   const dispatch = useDispatch();
-  const [sortedJobs, setSortedJobs] = useState([]);
+  const [sortedJobs, setSortedJobs] = useState<IJob[]>([]);
 
   const [addJobModalOpen, setAddJobModalOpen] = useState(false);
-  const [newJobData, setNewJobData] = useState({});
+  const [newJobData, setNewJobData] = useState<typeof emptyNewJobData | any>(
+    emptyNewJobData
+  );
   const [date, setDate] = useState(new Date());
   const [viewEditJobModal, setViewEditJobModal] = useState(
     focusedJob ? true : false
@@ -39,12 +60,12 @@ export const Jobs = () => {
   const [editJobMode, setEditJobMode] = useState(false);
   const [daysAhead, setDaysAhead] = useState();
 
-  const handleSetNewJobValues = (value, label) => {
+  const handleSetNewJobValues = (value: string, label: string) => {
     setNewJobData((prev) => ({ ...prev, [label]: value }));
   };
 
   const handleSubmitCreateNewJob = async () => {
-    const parsedDate = newJobData.scheduledDate ?? new Date();
+    const parsedDate = (newJobData as IJob).scheduledDate ?? new Date();
     dispatch(
       addNewJob({ registeredUser_id: userData.id, parsedDate, ...newJobData })
     );
@@ -76,15 +97,15 @@ export const Jobs = () => {
     setViewEditJobModal(false);
   };
 
-  const handleDeleteJob = async (id) => {
+  const handleDeleteJob = async (id: string) => {
     dispatch(deleteJob(id));
     setViewEditJobModal(false);
     dispatch(resetFocusedJob());
   };
 
   const handleAddNewJobIn = () => {
-    let focusedJobDateParsed = moment(focusedJob.scheduledDate);
-    let newDate = new Date(
+    const focusedJobDateParsed = moment(focusedJob.scheduledDate);
+    const newDate = new Date(
       focusedJobDateParsed.clone().add(Number(daysAhead), "days")
     );
     dispatch(addNewJob({ ...focusedJob, id: undefined, parsedDate: newDate }));
@@ -92,7 +113,7 @@ export const Jobs = () => {
     setViewEditJobModal(false);
   };
 
-  const filterFn = (job) => {
+  const filterFn = (job: IJob) => {
     return (
       job.title.toLowerCase().includes(jobsFilter.toLowerCase()) ||
       job.description.toLowerCase().includes(jobsFilter.toLowerCase())
@@ -100,8 +121,8 @@ export const Jobs = () => {
   };
 
   useEffect(() => {
-    let tmp2 = [...(userJobs ?? [])];
-    let tmp = tmp2?.sort(
+    const tmp2 = [...(userJobs ?? [])];
+    const tmp = tmp2?.sort(
       (a, b) =>
         new Date(a.scheduledDate).getTime() -
         new Date(b.scheduledDate).getTime()
@@ -153,7 +174,10 @@ export const Jobs = () => {
         <SlSelect
           label="Select customer"
           onSlInput={(e) =>
-            setNewJobData((prev) => ({ ...prev, customer_id: e.target.value }))
+            setNewJobData((prev) => ({
+              ...prev,
+              customer_id: (e.target as SlInputElement).value,
+            }))
           }
           value={newJobData?.customer_id ?? undefined}
         >
@@ -170,14 +194,19 @@ export const Jobs = () => {
         <SlInput
           label="Title"
           clearable
-          onSlInput={(e) => handleSetNewJobValues(e.target.value, "title")}
+          onSlInput={(e) =>
+            handleSetNewJobValues((e.target as SlInputElement).value, "title")
+          }
           value={newJobData?.title ?? ""}
         />
         <SlInput
           label="Description"
           clearable
           onSlInput={(e) =>
-            handleSetNewJobValues(e.target.value, "description")
+            handleSetNewJobValues(
+              (e.target as SlInputElement).value,
+              "description"
+            )
           }
           value={newJobData?.description ?? ""}
         />
@@ -186,7 +215,7 @@ export const Jobs = () => {
           <DatePicker
             className="custom-datepicker"
             selected={newJobData.scheduledDate ?? date}
-            onChange={(date) => {
+            onChange={(date: Date) => {
               setNewJobData((prev) => ({
                 ...prev,
                 scheduledDate: date,
@@ -266,7 +295,11 @@ export const Jobs = () => {
             label="Customer"
             className="edit-job-input"
             onSlInput={(e) =>
-              dispatch(setFocusedJob({ customer_id: e.target.value }))
+              dispatch(
+                setFocusedJob({
+                  customer_id: (e.target as SlInputElement).value,
+                })
+              )
             }
             disabled={!editJobMode}
             value={
@@ -289,7 +322,9 @@ export const Jobs = () => {
             label="Title"
             clearable
             onSlInput={(e) =>
-              dispatch(setFocusedJob({ title: e.target.value }))
+              dispatch(
+                setFocusedJob({ title: (e.target as SlInputElement).value })
+              )
             }
             value={focusedJob.title}
             disabled={!editJobMode}
@@ -299,7 +334,11 @@ export const Jobs = () => {
             label="Description"
             clearable
             onSlInput={(e) =>
-              dispatch(setFocusedJob({ description: e.target.value }))
+              dispatch(
+                setFocusedJob({
+                  description: (e.target as SlInputElement).value,
+                })
+              )
             }
             value={focusedJob.description}
             disabled={!editJobMode}

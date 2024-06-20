@@ -10,17 +10,22 @@ import {
   addNewCustomer,
   deleteCustomer,
   editCustomer,
-  fetchCustomers,
   setFocusedCustomer,
 } from "../../../../redux/slices/customerSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { ICustomer } from "../../../../redux/types/customerTypes";
+import { IReduxStoreRootState } from "../../../../redux/types/storeType";
 
 export const Customers = ({ user }) => {
-  const customerFilter = useSelector((state) => state.customersData.filter);
+  const customerFilter: string = useSelector(
+    (state: IReduxStoreRootState) => state.customersData.filter
+  );
 
-  const customers = useSelector((state) => state.customersData.data);
-  const focusedCustomer = useSelector(
-    (state) => state.customersData.focusedCustomer
+  const customers = useSelector(
+    (state: IReduxStoreRootState) => state.customersData.data
+  );
+  const focusedCustomer: ICustomer = useSelector(
+    (state: IReduxStoreRootState) => state.customersData.focusedCustomer
   );
   const dispatch = useDispatch();
   const [dialogOpen, setDialogOpen] = useState(false);

@@ -3,19 +3,29 @@ import "./HomeContent.styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { setFocusedJob } from "../../../../redux/slices/jobSlice";
-import { fetchCustomers } from "../../../../redux/slices/customerSlice";
+import { IReduxStoreRootState } from "../../../../redux/types/storeType";
+import { IJob } from "../../../../redux/types/jobsTypes";
 
-export const HomeContent = ({ setCurrentPage }) => {
-  const userData = useSelector((state) => state.userData.data);
-  const userJobs = useSelector((state) => state.jobsData.jobs);
-  const customers = useSelector((state) => state.customersData.data);
+export const HomeContent = ({
+  setCurrentPage,
+}: {
+  setCurrentPage: React.Dispatch<
+    React.SetStateAction<"HOME" | "JOBS" | "CUSTOMERS">
+  >;
+}) => {
+  const userJobs = useSelector(
+    (state: IReduxStoreRootState) => state.jobsData.jobs
+  );
+  const customers = useSelector(
+    (state: IReduxStoreRootState) => state.customersData.data
+  );
   const dispatch = useDispatch();
-  const [sortedJobs, setSortedJobs] = useState([]);
+  const [sortedJobs, setSortedJobs] = useState<IJob[]>([]);
   const [filter, setFilter] = useState("today");
 
   useEffect(() => {
-    let tmp2 = [...(userJobs ?? [])];
-    let tmp = tmp2?.sort(
+    const tmp2 = [...(userJobs ?? [])];
+    const tmp = tmp2?.sort(
       (a, b) =>
         new Date(a.scheduledDate).getTime() -
         new Date(b.scheduledDate).getTime()
@@ -23,7 +33,7 @@ export const HomeContent = ({ setCurrentPage }) => {
     setSortedJobs(tmp);
   }, [userJobs]);
 
-  const filterFn = (job) => {
+  const filterFn = (job: IJob) => {
     const customer = customers?.find(
       (customer) => customer.id === job.customer_id
     );
@@ -48,7 +58,7 @@ export const HomeContent = ({ setCurrentPage }) => {
     }
   };
 
-  const handleSetFocusedJob = (job) => {
+  const handleSetFocusedJob = (job: IJob) => {
     setCurrentPage("JOBS");
     dispatch(
       setFocusedJob({
@@ -85,7 +95,7 @@ export const HomeContent = ({ setCurrentPage }) => {
         </div>
       </div>
       <div className="homepage-all-jobs">
-        {sortedJobs?.filter(filterFn).map((job) => {
+        {sortedJobs?.filter(filterFn).map((job: IJob) => {
           return (
             <div
               className="job"
