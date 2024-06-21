@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   SlButton,
   SlDialog,
@@ -15,12 +15,15 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { ICustomer } from "../../../../redux/types/customerTypes";
 import { IReduxStoreRootState } from "../../../../redux/types/storeType";
+import { LoadingContext } from "../../../../Context/LoadingContext/LoadingContext";
 
-export const Customers = ({ user }) => {
+export const Customers = () => {
   const customerFilter: string = useSelector(
     (state: IReduxStoreRootState) => state.customersData.filter
   );
-
+  const userData = useSelector(
+    (state: IReduxStoreRootState) => state.userData.userData
+  );
   const customers = useSelector(
     (state: IReduxStoreRootState) => state.customersData.data
   );
@@ -34,6 +37,7 @@ export const Customers = ({ user }) => {
     focusedCustomer.id ? { ...focusedCustomer } : {}
   );
   const [viewEditCustomerModal, setViewEditCustomerModal] = useState(false);
+  const { startLoading, stopLoading } = useContext(LoadingContext);
 
   const handleSetNewCustomerValues = (value: string, label: string) => {
     setNewCustomerData((prev) => ({ ...prev, [label]: value }));
@@ -43,15 +47,22 @@ export const Customers = ({ user }) => {
   };
 
   const handleEditCustomer = () => {
+    startLoading();
     dispatch(editCustomer({ ...editCustomerData }));
+    stopLoading();
   };
 
   const handleAddCustomer = () => {
-    dispatch(addNewCustomer({ id: user.id, ...newCustomerData }));
+    startLoading();
+    dispatch(addNewCustomer({ id: userData.id, ...newCustomerData }));
+    setNewCustomerData({});
+    stopLoading();
   };
 
   const handleDeleteCustomer = (id) => {
+    startLoading();
     dispatch(deleteCustomer(id));
+    stopLoading();
   };
 
   useEffect(() => {
@@ -90,6 +101,7 @@ export const Customers = ({ user }) => {
             onSlInput={(e) =>
               handleSetNewCustomerValues(e.target.value, "name")
             }
+            value={newCustomerData?.name ?? ""}
           />
           <SlInput
             label="Address"
@@ -97,6 +109,7 @@ export const Customers = ({ user }) => {
             onSlInput={(e) =>
               handleSetNewCustomerValues(e.target.value, "address")
             }
+            value={newCustomerData?.address ?? ""}
           />
           <SlInput
             label="Phone"
@@ -104,6 +117,7 @@ export const Customers = ({ user }) => {
             onSlInput={(e) =>
               handleSetNewCustomerValues(e.target.value, "phone")
             }
+            value={newCustomerData?.phone ?? ""}
           />
         </div>
         <div className="customer-dialog-buttons-wrapper">

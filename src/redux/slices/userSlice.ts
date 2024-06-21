@@ -26,11 +26,6 @@ export const fetchUser = createAsyncThunk("user/fetchUser", async (userId) => {
   return data[0];
 });
 
-export const loginUser = createAsyncThunk("user/loginUser", async () => {
-  const { data } = await supabase.auth.getSession();
-  return data.user as IUser;
-});
-
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -51,9 +46,6 @@ export const userSlice = createSlice({
       .addCase(fetchUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.userData = action.payload;
       });
   },
 });

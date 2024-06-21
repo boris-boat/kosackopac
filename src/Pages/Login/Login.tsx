@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./Login.styles.css";
 import { supabase } from "../../Utils/database";
 import { useDispatch } from "react-redux";
-import { loginUser, setUser } from "../../redux/slices/userSlice";
+import { setUser } from "../../redux/slices/userSlice";
 import { fetchJobs } from "../../redux/slices/jobSlice";
 import { fetchCustomers } from "../../redux/slices/customerSlice";
 import { toast } from "react-toastify";
+import { LoadingContext } from "../../Context/LoadingContext/LoadingContext";
 function Login() {
-  // State variables to store user input
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const { loading, startLoading, stopLoading } = useContext(LoadingContext);
   const dispatch = useDispatch();
 
   const handleChange = (event) => {
@@ -24,7 +25,7 @@ function Login() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    startLoading();
     await supabase.auth
       .signInWithPassword({
         email,
@@ -41,8 +42,38 @@ function Login() {
         dispatch(setUser(data.data.user));
         dispatch(fetchJobs(data.data.user.id));
         dispatch(fetchCustomers(data.data.user.id));
+        stopLoading();
       });
   };
+
+  useEffect(() => {
+    const get = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (!error && data?.session?.user) {
+        startLoading();
+        const setUserPromise: Promise<void> = new Promise((resolve) => {
+          dispatch(setUser(data.session.user));
+          resolve();
+        });
+        const fetchJobsPromise: Promise<void> = new Promise((resolve) => {
+          dispatch(fetchJobs(data.session.user.id));
+          resolve();
+        });
+        const fetchCustomersPromise: Promise<void> = new Promise((resolve) => {
+          dispatch(fetchCustomers(data.session.user.id));
+          resolve();
+        });
+        // Wait for all promises to complete
+        await Promise.all([
+          setUserPromise,
+          fetchJobsPromise,
+          fetchCustomersPromise,
+        ]);
+        stopLoading();
+      }
+    };
+    get();
+  }, []);
 
   return (
     <div className="login-page">
