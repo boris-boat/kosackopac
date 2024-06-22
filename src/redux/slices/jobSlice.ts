@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { supabase } from "../../Utils/database";
 import { toast } from "react-toastify";
+
 const initialState = {
   jobs: [],
   data: {
@@ -49,7 +50,6 @@ export const fetchJobs = createAsyncThunk("jobs/fetchJobs", async (id) => {
     .select("*")
     .eq("registeredUser_id", id);
   return data;
-  console.log(data);
 });
 export const jobsSlice = createSlice({
   name: "jobs",
