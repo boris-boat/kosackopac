@@ -15,11 +15,11 @@ export const Home = () => {
     (state: IInitialUserState) => state.userData
   );
 
-  const getContent = (content: "HOME" | "JOBS" | "CUSTOMERS") => {
+  const getContent = (content: "HOME" | "ALL JOBS" | "CUSTOMERS") => {
     switch (content) {
       case "HOME":
         return <HomeContent setCurrentPage={setCurrentPage} />;
-      case "JOBS":
+      case "ALL JOBS":
         return <Jobs />;
       case "CUSTOMERS":
         return <Customers user={userData} />;
@@ -33,7 +33,7 @@ export const Home = () => {
         <Navbar
           setCurrentPage={
             setCurrentPage as React.Dispatch<
-              React.SetStateAction<"HOME" | "JOBS" | "CUSTOMERS">
+              React.SetStateAction<"HOME" | "ALL JOBS" | "CUSTOMERS">
             >
           }
           currentPage={currentPage}

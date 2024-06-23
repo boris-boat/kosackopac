@@ -66,7 +66,6 @@ export const Jobs = () => {
 
   const handleSubmitCreateNewJob = async () => {
     const parsedDate = (newJobData as IJob).scheduledDate ?? new Date();
-    console.log(parsedDate);
     dispatch(
       addNewJob({ registeredUser_id: userData.id, parsedDate, ...newJobData })
     );

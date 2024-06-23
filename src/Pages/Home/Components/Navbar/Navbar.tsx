@@ -47,11 +47,11 @@ export const Navbar = ({ currentPage, setCurrentPage }) => {
           </SlButton>
           <SlButton
             onClick={() => {
-              setCurrentPage("JOBS");
+              setCurrentPage("ALL JOBS");
               setOpen(false);
             }}
           >
-            JOBS
+            ALL JOBS
           </SlButton>
         </div>
 
@@ -86,9 +86,11 @@ export const Navbar = ({ currentPage, setCurrentPage }) => {
         />
       </div>
       <div className="top-bar">
-        <div className="current-location">{currentPage}</div>
+        <div className="current-location">
+          {currentPage === "HOME" ? "ALL PENDING JOBS" : currentPage}
+        </div>
         <div className="search">
-          {currentPage === "JOBS" && (
+          {currentPage === "ALL JOBS" && (
             <input
               type="text"
               placeholder="Search"

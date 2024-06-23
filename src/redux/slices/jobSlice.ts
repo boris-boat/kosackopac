@@ -55,7 +55,10 @@ export const jobsSlice = createSlice({
   initialState,
   reducers: {
     setFocusedJob: (state, action) => {
-      state.data.focusedJob = { ...state.data.focusedJob, ...action.payload };
+      state.data.focusedJob = {
+        ...state.data.focusedJob,
+        ...action.payload,
+      };
     },
     resetFocusedJob: (state) => {
       state.data.focusedJob = {};

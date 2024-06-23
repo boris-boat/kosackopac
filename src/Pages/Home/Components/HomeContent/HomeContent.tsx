@@ -10,7 +10,7 @@ export const HomeContent = ({
   setCurrentPage,
 }: {
   setCurrentPage: React.Dispatch<
-    React.SetStateAction<"HOME" | "JOBS" | "CUSTOMERS">
+    React.SetStateAction<"HOME" | "ALL JOBS" | "CUSTOMERS">
   >;
 }) => {
   const userJobs = useSelector(
@@ -21,7 +21,7 @@ export const HomeContent = ({
   );
   const dispatch = useDispatch();
   const [sortedJobs, setSortedJobs] = useState<IJob[]>([]);
-  const [filter, setFilter] = useState("today");
+  const [filter, setFilter] = useState("");
 
   useEffect(() => {
     const tmp2 = [...(userJobs ?? [])];
@@ -51,19 +51,20 @@ export const HomeContent = ({
       );
     } else {
       return (
-        job.title.toLowerCase().includes(filter.toLowerCase()) ||
-        job.description.toLowerCase().includes(filter.toLowerCase()) ||
-        customerName.includes(filter.toLowerCase())
+        moment(job.scheduledDate).isSameOrAfter(moment(), "day") &&
+        (job.title.toLowerCase().includes(filter.toLowerCase()) ||
+          job.description.toLowerCase().includes(filter.toLowerCase()) ||
+          customerName.includes(filter.toLowerCase()))
       );
     }
   };
 
   const handleSetFocusedJob = (job: IJob) => {
-    setCurrentPage("JOBS");
+    setCurrentPage("ALL JOBS");
     dispatch(
       setFocusedJob({
         ...job,
-        scheduledDate: new Date(job.scheduledDate),
+        scheduledDate: new Date(job.scheduledDate).toISOString(),
       })
     );
   };
@@ -73,12 +74,16 @@ export const HomeContent = ({
       <div className="home-content-filter">
         <button
           className={filter === "today" ? "selected" : ""}
-          onClick={() => setFilter("today")}
+          onClick={() => {
+            setFilter((prev) => (prev === "today" ? "" : "today"));
+          }}
         >
           TODAY
         </button>
         <button
-          onClick={() => setFilter("tommorow")}
+          onClick={() => {
+            setFilter((prev) => (prev === "tommorow" ? "" : "tommorow"));
+          }}
           className={filter === "tommorow" ? "selected" : ""}
         >
           TOMORROW
