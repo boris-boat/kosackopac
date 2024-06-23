@@ -25,7 +25,6 @@ export const addNewJob = createAsyncThunk(
         },
       ])
       .select();
-    console.log(data[0]);
     return data[0];
   }
 );

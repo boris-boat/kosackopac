@@ -66,6 +66,7 @@ export const Jobs = () => {
 
   const handleSubmitCreateNewJob = async () => {
     const parsedDate = (newJobData as IJob).scheduledDate ?? new Date();
+    console.log(parsedDate);
     dispatch(
       addNewJob({ registeredUser_id: userData.id, parsedDate, ...newJobData })
     );
@@ -152,9 +153,7 @@ export const Jobs = () => {
               </div>
               <div className="second-row">
                 <span>{job.description}</span>
-                <span>
-                  {moment(job.scheduledDate).format("ddd DD.MM.YY HH:MM")}
-                </span>
+                <span>{moment(job.scheduledDate).format("LLLL")}</span>
               </div>
             </div>
           </div>

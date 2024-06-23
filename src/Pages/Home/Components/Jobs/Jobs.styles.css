@@ -33,10 +33,7 @@
       justify-content: space-around;
       text-align: center;
       :first-child {
-        width: 50%;
-      }
-      :nth-child(2) {
-        width: 50%;
+        min-width: 45%;
       }
     }
   }
