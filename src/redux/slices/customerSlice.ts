@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { supabase } from "../../Utils/database";
 import { fetchUser } from "./userSlice";
 import { toast } from "react-toastify";
+import { ICustomer } from "../types/customerTypes";
 
 const initialState = {
   data: [],
@@ -24,7 +25,7 @@ export const fetchCustomers = createAsyncThunk(
 );
 export const addNewCustomer = createAsyncThunk(
   "customers/addNewCustomer",
-  async (newCustomerData) => {
+  async (newCustomerData: ICustomer) => {
     const { data, error } = await supabase
       .from("customers")
       .insert([
@@ -36,20 +37,25 @@ export const addNewCustomer = createAsyncThunk(
         },
       ])
       .select();
-    console.log(error ?? data);
-    return data[0];
+    if (error) {
+      return;
+    }
+    return data[0] as ICustomer;
   }
 );
 
 export const editCustomer = createAsyncThunk(
   "customers/editCustomer",
-  async (editCustomerData) => {
+  async (editCustomerData: ICustomer) => {
     const { data, error } = await supabase
       .from("customers")
       .update(editCustomerData)
       .eq("id", editCustomerData.id)
       .select();
-    return data[0];
+    if (error) {
+      return;
+    }
+    return data[0] as ICustomer;
   }
 );
 
@@ -66,7 +72,6 @@ export const customersSlice = createSlice({
   name: "customers",
   initialState,
   reducers: {
-    setCustomers: (state, action) => (state.userData = action.payload),
     setFocusedCustomer: (state, action) => {
       state.focusedCustomer = action.payload;
     },

@@ -4,7 +4,7 @@ export interface ICustomersState {
   filter: string;
 }
 
-interface ICustomer {
+export interface ICustomer {
   id: string;
   name: string;
   address: string;

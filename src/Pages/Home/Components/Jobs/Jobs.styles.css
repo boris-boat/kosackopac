@@ -19,11 +19,25 @@
       display: flex;
       justify-content: space-around;
       font-weight: bold;
+      text-align: center;
+      :first-child {
+        width: 50%;
+      }
+      :nth-child(2) {
+        width: 50%;
+      }
     }
     .second-row {
       width: 100%;
       display: flex;
       justify-content: space-around;
+      text-align: center;
+      :first-child {
+        width: 50%;
+      }
+      :nth-child(2) {
+        width: 50%;
+      }
     }
   }
 }
