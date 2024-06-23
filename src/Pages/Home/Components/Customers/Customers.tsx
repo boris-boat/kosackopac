@@ -131,7 +131,6 @@ export const Customers = () => {
             disabled={
               !newCustomerData.name ||
               !newCustomerData.address ||
-              !newCustomerData.phone
             }
           >
             Confirm
