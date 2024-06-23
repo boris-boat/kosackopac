@@ -37,6 +37,7 @@ function Login() {
             position: "bottom-center",
             type: "error",
           });
+          stopLoading();
           return;
         }
         dispatch(setUser(data.data.user));
