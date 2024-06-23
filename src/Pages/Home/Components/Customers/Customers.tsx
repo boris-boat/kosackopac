@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ICustomer } from "../../../../redux/types/customerTypes";
 import { IReduxStoreRootState } from "../../../../redux/types/storeType";
 import { LoadingContext } from "../../../../Context/LoadingContext/LoadingContext";
+import { useConfirm } from "../../../../Utils/Custom Hooks/UseConfirm/useConfirm";
 
 export const Customers = () => {
   const customerFilter: string = useSelector(
@@ -30,6 +31,7 @@ export const Customers = () => {
   const focusedCustomer: ICustomer = useSelector(
     (state: IReduxStoreRootState) => state.customersData.focusedCustomer
   );
+  const { show, ConfirmModal } = useConfirm();
   const dispatch = useDispatch();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [newCustomerData, setNewCustomerData] = useState({});
@@ -59,10 +61,14 @@ export const Customers = () => {
     stopLoading();
   };
 
-  const handleDeleteCustomer = (id) => {
-    startLoading();
-    dispatch(deleteCustomer(id));
-    stopLoading();
+  const handleDeleteCustomer = async (id) => {
+    const confirmed = await show();
+    if (confirmed) {
+      startLoading();
+      dispatch(deleteCustomer(id));
+      stopLoading();
+      setViewEditCustomerModal(false);
+    }
   };
 
   useEffect(() => {
@@ -197,7 +203,6 @@ export const Customers = () => {
               variant="danger"
               onClick={() => {
                 handleDeleteCustomer(editCustomerData.id);
-                setViewEditCustomerModal(false);
               }}
             >
               Delete
@@ -212,6 +217,7 @@ export const Customers = () => {
           </div>
         </SlDialog>
       ) : null}
+      <ConfirmModal caption="Are you sure you want to delete this customer?" />
     </div>
   );
 };

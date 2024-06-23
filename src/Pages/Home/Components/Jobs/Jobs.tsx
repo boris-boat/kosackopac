@@ -22,6 +22,7 @@ import {
 import { daysAheadOptions } from "../../../../Utils/daysAheadOptions";
 import { IReduxStoreRootState } from "../../../../redux/types/storeType";
 import { IJob } from "../../../../redux/types/jobsTypes";
+import { useConfirm } from "../../../../Utils/Custom Hooks/UseConfirm/useConfirm";
 
 export const Jobs = () => {
   const userData = useSelector(
@@ -47,6 +48,7 @@ export const Jobs = () => {
     dateScheduled: "",
   };
   const dispatch = useDispatch();
+  const { show, ConfirmModal } = useConfirm();
   const [sortedJobs, setSortedJobs] = useState<IJob[]>([]);
 
   const [addJobModalOpen, setAddJobModalOpen] = useState(false);
@@ -98,9 +100,12 @@ export const Jobs = () => {
   };
 
   const handleDeleteJob = async (id: string) => {
-    dispatch(deleteJob(id));
-    setViewEditJobModal(false);
-    dispatch(resetFocusedJob());
+    const confirmed = await show();
+    if (confirmed) {
+      dispatch(deleteJob(id));
+      setViewEditJobModal(false);
+      dispatch(resetFocusedJob());
+    }
   };
 
   const handleAddNewJobIn = () => {
@@ -392,6 +397,7 @@ export const Jobs = () => {
           </div>
         </SlDialog>
       ) : null}
+      <ConfirmModal caption="Are you sure you want to delete this job?" />
     </div>
   );
 };

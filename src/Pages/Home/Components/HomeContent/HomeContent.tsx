@@ -5,6 +5,7 @@ import moment from "moment";
 import { setFocusedJob } from "../../../../redux/slices/jobSlice";
 import { IReduxStoreRootState } from "../../../../redux/types/storeType";
 import { IJob } from "../../../../redux/types/jobsTypes";
+import { useConfirm } from "../../../../Utils/Custom Hooks/UseConfirm/useConfirm";
 
 export const HomeContent = ({
   setCurrentPage,
