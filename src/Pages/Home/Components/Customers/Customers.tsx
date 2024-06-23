@@ -128,10 +128,7 @@ export const Customers = () => {
               handleAddCustomer();
               setDialogOpen(false);
             }}
-            disabled={
-              !newCustomerData.name ||
-              !newCustomerData.address ||
-            }
+            disabled={!newCustomerData.name || !newCustomerData.address}
           >
             Confirm
           </SlButton>
