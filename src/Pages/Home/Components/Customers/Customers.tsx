@@ -94,10 +94,14 @@ export const Customers = () => {
             >
               {customer?.name}
             </span>
-            <div>
-              <a href={`tel:${customer?.phone}`}>{customer?.phone}</a>{" "}
-              <img src={phone_icon} alt="" />
-            </div>
+            {customer?.phone ? (
+              <div>
+                <a href={`tel:${customer?.phone}`}>{customer?.phone}</a>{" "}
+                <img src={phone_icon} alt="" />
+              </div>
+            ) : (
+              <span>No Phone entered</span>
+            )}
           </div>
         ))}
       <SlDialog
