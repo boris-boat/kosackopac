@@ -8,12 +8,13 @@ const initialState = {
   data: [],
   focusedCustomer: {},
 };
+const databaseName = import.meta.env.VITE_CUSTOMERS_DATABASE;
 
 export const fetchCustomers = createAsyncThunk(
   "customers/fetchCustomers",
   async (userId) => {
     const { data, error } = await supabase
-      .from("customers")
+      .from(databaseName)
       .select("*")
       .eq("registeredUsers_id", userId);
     if (error) {
@@ -27,7 +28,7 @@ export const addNewCustomer = createAsyncThunk(
   "customers/addNewCustomer",
   async (newCustomerData: ICustomer) => {
     const { data, error } = await supabase
-      .from("customers")
+      .from(databaseName)
       .insert([
         {
           registeredUsers_id: newCustomerData.id,
@@ -48,7 +49,7 @@ export const editCustomer = createAsyncThunk(
   "customers/editCustomer",
   async (editCustomerData: ICustomer) => {
     const { data, error } = await supabase
-      .from("customers")
+      .from(databaseName)
       .update(editCustomerData)
       .eq("id", editCustomerData.id)
       .select();
@@ -62,7 +63,7 @@ export const editCustomer = createAsyncThunk(
 export const deleteCustomer = createAsyncThunk(
   "customers/deleteCustomer",
   async (id, { dispatch }) => {
-    await supabase.from("customers").delete().eq("id", id);
+    await supabase.from(databaseName).delete().eq("id", id);
     dispatch(fetchUser());
     return id;
   }

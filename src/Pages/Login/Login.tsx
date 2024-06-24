@@ -49,8 +49,6 @@ function Login() {
 
   useEffect(() => {
     const get = async () => {
-      const confirmed = await show();
-      console.log(confirmed);
       const { data, error } = await supabase.auth.getSession();
       if (!error && data?.session?.user) {
         startLoading();

@@ -11,8 +11,26 @@
     border-radius: 10px;
     box-shadow: inset 0px 0px 0px 1px yellowgreen;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
+    :first-child {
+      flex: 1;
+      text-align: center;
+    }
+    :nth-child(2) {
+      background-color: rgb(221, 221, 221);
+      padding: 1px 4px 1px 0;
+      border-radius: 5px;
+      text-align: center;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      width: 40%;
+      img {
+        height: 1rem;
+        width: 1rem;
+      }
+    }
   }
 }
 .customer-add-customer-form {

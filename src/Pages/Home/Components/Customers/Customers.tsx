@@ -17,6 +17,7 @@ import { ICustomer } from "../../../../redux/types/customerTypes";
 import { IReduxStoreRootState } from "../../../../redux/types/storeType";
 import { LoadingContext } from "../../../../Context/LoadingContext/LoadingContext";
 import { useConfirm } from "../../../../Utils/Custom Hooks/UseConfirm/useConfirm";
+import phone_icon from "../../../../assets/phone-call.png";
 
 export const Customers = () => {
   const customerFilter: string = useSelector(
@@ -84,15 +85,19 @@ export const Customers = () => {
           } else return customer;
         })
         .map((customer) => (
-          <div
-            className="customer"
-            key={customer?.id}
-            onClick={() => {
-              dispatch(setFocusedCustomer(customer));
-              setViewEditCustomerModal(true);
-            }}
-          >
-            {customer?.name}
+          <div className="customer" key={customer?.id}>
+            <span
+              onClick={() => {
+                dispatch(setFocusedCustomer(customer));
+                setViewEditCustomerModal(true);
+              }}
+            >
+              {customer?.name}
+            </span>
+            <div>
+              <a href={`tel:${customer?.phone}`}>{customer?.phone}</a>{" "}
+              <img src={phone_icon} alt="" />
+            </div>
           </div>
         ))}
       <SlDialog

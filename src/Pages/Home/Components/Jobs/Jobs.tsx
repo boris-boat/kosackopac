@@ -76,9 +76,10 @@ export const Jobs = () => {
 
   const handleViewEditJob = async (focusedJobId: string) => {
     const { data, error } = await supabase
-      .from("jobs")
+      .from(import.meta.env.VITE_JOBS_DATABASE)
       .select("*")
       .eq("id", focusedJobId);
+    console.log(data);
     if (error) {
       console.log(error);
       return;

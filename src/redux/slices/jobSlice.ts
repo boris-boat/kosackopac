@@ -9,11 +9,13 @@ const initialState = {
   },
   filter: "",
 };
+const databaseName = import.meta.env.VITE_JOBS_DATABASE;
+
 export const addNewJob = createAsyncThunk(
   "jobs/addNewJob",
   async (newJobData) => {
     const { data, error } = await supabase
-      .from("jobs")
+      .from(databaseName)
       .insert([
         {
           title: newJobData.title,
@@ -29,14 +31,14 @@ export const addNewJob = createAsyncThunk(
   }
 );
 export const deleteJob = createAsyncThunk("jobs/deleteJob", async (id) => {
-  await supabase.from("jobs").delete().eq("id", id);
+  await supabase.from(databaseName).delete().eq("id", id);
   return id;
 });
 export const updateJob = createAsyncThunk(
   "jobs/updateJob",
   async (focusedJob) => {
-    const { data, error } = await supabase
-      .from("jobs")
+    const { data } = await supabase
+      .from(databaseName)
       .update(focusedJob)
       .eq("id", focusedJob.id)
       .select();
@@ -45,7 +47,7 @@ export const updateJob = createAsyncThunk(
 );
 export const fetchJobs = createAsyncThunk("jobs/fetchJobs", async (id) => {
   const { data } = await supabase
-    .from("jobs")
+    .from(databaseName)
     .select("*")
     .eq("registeredUser_id", id);
   return data;
