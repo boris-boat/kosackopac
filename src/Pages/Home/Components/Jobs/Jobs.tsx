@@ -61,6 +61,7 @@ export const Jobs = () => {
   );
   const [editJobMode, setEditJobMode] = useState(false);
   const [daysAhead, setDaysAhead] = useState();
+  const [daysAheadRepeatedTimes, setDaysAheadRepeatedTimes] = useState(1);
 
   const handleSetNewJobValues = (value: string, label: string) => {
     setNewJobData((prev) => ({ ...prev, [label]: value }));
@@ -111,12 +112,18 @@ export const Jobs = () => {
 
   const handleAddNewJobIn = () => {
     const focusedJobDateParsed = moment(focusedJob.scheduledDate);
-    const newDate = new Date(
-      focusedJobDateParsed.clone().add(Number(daysAhead), "days")
-    );
-    dispatch(addNewJob({ ...focusedJob, id: undefined, parsedDate: newDate }));
+    for (let i = 1; i <= daysAheadRepeatedTimes; i++) {
+      const newDate = new Date(
+        focusedJobDateParsed.clone().add(i * daysAhead, "days")
+      );
+
+      dispatch(
+        addNewJob({ ...focusedJob, id: undefined, parsedDate: newDate })
+      );
+    }
     setDaysAhead(undefined);
     setViewEditJobModal(false);
+    setDaysAheadRepeatedTimes(1);
   };
 
   const filterFn = (job: IJob) => {
@@ -273,7 +280,7 @@ export const Jobs = () => {
           {!editJobMode && (
             <div className="new-job-creator">
               <SlSelect
-                label="Create new job in"
+                label="Create new job"
                 onSlInput={(e) => {
                   setDaysAhead(e.target.value);
                 }}
@@ -287,9 +294,17 @@ export const Jobs = () => {
                   );
                 })}
               </SlSelect>
+              <SlInput
+                label="Repeat"
+                type="number"
+                defaultValue="1"
+                value={String(daysAheadRepeatedTimes)}
+                onSlChange={(e) => setDaysAheadRepeatedTimes(e.target.value)}
+              ></SlInput>
               <SlButton
                 variant="success"
-                onClick={() => handleAddNewJobIn(daysAhead)}
+                onClick={() => handleAddNewJobIn()}
+                disabled={!daysAhead}
               >
                 Confirm
               </SlButton>

@@ -21,10 +21,10 @@
       font-weight: bold;
       text-align: center;
       :first-child {
-        width: 50%;
+        width: fit-content;
       }
       :nth-child(2) {
-        width: 50%;
+        width: fit-content;
       }
     }
     .second-row {
@@ -33,7 +33,7 @@
       justify-content: space-around;
       text-align: center;
       :first-child {
-        min-width: 45%;
+        min-width: fit-content;
       }
     }
   }

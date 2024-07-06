@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { supabase } from "../../Utils/database";
-import { IInitialUserState, IUser } from "../types/userTypes";
+import { IInitialUserState } from "../types/userTypes";
 
 const initialState: IInitialUserState = {
   status: "idle",

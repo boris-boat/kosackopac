@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { supabase } from "../../Utils/database";
 import { toast } from "react-toastify";
+import { IJob, IJobsState } from "../types/jobsTypes";
 
-const initialState = {
+const initialState: IJobsState = {
   jobs: [],
   data: {
     focusedJob: {},
@@ -13,7 +14,7 @@ const databaseName = import.meta.env.VITE_JOBS_DATABASE;
 
 export const addNewJob = createAsyncThunk(
   "jobs/addNewJob",
-  async (newJobData) => {
+  async (newJobData: IJob) => {
     const { data, error } = await supabase
       .from(databaseName)
       .insert([
@@ -22,11 +23,15 @@ export const addNewJob = createAsyncThunk(
           description: newJobData.description,
           customer_id: newJobData.customer_id,
           registeredUser_id: newJobData.registeredUser_id,
+          //@ts-expect-error date is being parsed to fit description
           scheduledDate: newJobData.parsedDate,
           status: "pending",
         },
       ])
       .select();
+    if (error) {
+      return;
+    }
     return data[0];
   }
 );
@@ -36,12 +41,15 @@ export const deleteJob = createAsyncThunk("jobs/deleteJob", async (id) => {
 });
 export const updateJob = createAsyncThunk(
   "jobs/updateJob",
-  async (focusedJob) => {
-    const { data } = await supabase
+  async (focusedJob: IJob) => {
+    const { data, error } = await supabase
       .from(databaseName)
       .update(focusedJob)
       .eq("id", focusedJob.id)
       .select();
+    if (error) {
+      return;
+    }
     return data[0];
   }
 );
