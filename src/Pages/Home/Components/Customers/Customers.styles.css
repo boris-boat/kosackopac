@@ -38,6 +38,21 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  div {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    padding-right: 10px;
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dotted gray;
+      width: 25%;
+      height: 38px;
+      border-radius: 5px;
+    }
+  }
 }
 .customer-dialog-buttons-wrapper {
   margin-top: 15px;
