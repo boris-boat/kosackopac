@@ -187,14 +187,23 @@ export const Customers = () => {
               }
               value={editCustomerData.address}
             />
-            <SlInput
-              label="Phone"
-              clearable
-              onSlInput={(e) =>
-                handleSetEditCustomerValues(e.target.value, "phone")
-              }
-              value={editCustomerData.phone}
-            />
+            <div>
+              <SlInput
+                label="Phone"
+                clearable
+                onSlInput={(e) =>
+                  handleSetEditCustomerValues(e.target.value, "phone")
+                }
+                value={editCustomerData.phone}
+                style={{ width: "65%" }}
+              />
+              <a
+                href={`https://www.google.com/maps/place/${editCustomerData.address}`}
+                target="_blank"
+              >
+                Map
+              </a>
+            </div>
           </div>
           <div className="customer-dialog-buttons-wrapper">
             <SlButton
