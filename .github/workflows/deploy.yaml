@@ -26,7 +26,7 @@ jobs:
 
       - name: Deploy to Netlify
         if: github.ref == 'refs/heads/master'
-        uses: netlify/actions/deploy@v2.2.0
+        uses: netlify/actions/deploy@v1.1.0
         with:
           publish-dir: ./build
           production-deploy: true
