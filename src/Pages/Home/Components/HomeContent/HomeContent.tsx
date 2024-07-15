@@ -5,7 +5,6 @@ import moment from "moment";
 import { setFocusedJob } from "../../../../redux/slices/jobSlice";
 import { IReduxStoreRootState } from "../../../../redux/types/storeType";
 import { IJob } from "../../../../redux/types/jobsTypes";
-import { useConfirm } from "../../../../Utils/Custom Hooks/UseConfirm/useConfirm";
 
 export const HomeContent = ({
   setCurrentPage,
@@ -118,7 +117,7 @@ export const HomeContent = ({
                 </p>
                 <div className="second-row">
                   <span>{job.description ?? job.title}</span>
-                  <span>{moment(job.scheduledDate).format("LLLL")}</span>
+                  <span>{moment(job.scheduledDate).format("llll")}</span>
                 </div>
               </div>
             </div>
