@@ -80,7 +80,6 @@ export const Jobs = () => {
       .from(import.meta.env.VITE_JOBS_DATABASE)
       .select("*")
       .eq("id", focusedJobId);
-    console.log(data);
     if (error) {
       console.log(error);
       return;
@@ -142,6 +141,9 @@ export const Jobs = () => {
     );
     setSortedJobs(tmp);
   }, [userJobs]);
+  const focusedCustomerAddress =
+    customers.find((customer) => customer.id === focusedJob.customer_id)
+      ?.address ?? "";
 
   return (
     <div className="all-jobs">
@@ -165,7 +167,7 @@ export const Jobs = () => {
               </div>
               <div className="second-row">
                 <span>{job.description}</span>
-                <span>{moment(job.scheduledDate).format("LLLL")}</span>
+                <span>{moment(job.scheduledDate).format("llll")}</span>
               </div>
             </div>
           </div>
@@ -363,19 +365,29 @@ export const Jobs = () => {
             disabled={!editJobMode}
           />
           <div className="date-time-picker">
-            <span>Date and time</span>
-            <DatePicker
-              className="custom-datepicker"
-              selected={focusedJob.scheduledDate}
-              onChange={(date) => {
-                dispatch(setFocusedJob({ scheduledDate: date }));
-              }}
-              showTimeSelect
-              timeIntervals={15}
-              timeFormat="HH:mm"
-              dateFormat="dd/MM/YYYY HH:mm"
-              disabled={!editJobMode}
-            />
+            <div className="left">
+              <span>Date and time</span>
+              <DatePicker
+                className="custom-datepicker"
+                selected={focusedJob.scheduledDate}
+                onChange={(date) => {
+                  dispatch(setFocusedJob({ scheduledDate: date }));
+                }}
+                showTimeSelect
+                timeIntervals={15}
+                timeFormat="HH:mm"
+                dateFormat="dd/MM/YYYY HH:mm"
+                disabled={!editJobMode}
+              />
+            </div>
+            {!editJobMode && focusedCustomerAddress ? (
+              <a
+                href={`https://www.google.com/maps/place/${focusedCustomerAddress}`}
+                target="_blank"
+              >
+                Map
+              </a>
+            ) : null}
           </div>
           <div className="jobs-dialog-buttons-wrapper">
             <SlButton
