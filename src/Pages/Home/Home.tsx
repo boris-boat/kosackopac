@@ -6,6 +6,7 @@ import { Jobs } from "./Components/Jobs/Jobs";
 import { Customers } from "./Components/Customers/Customers";
 import { useSelector } from "react-redux";
 import { IInitialUserState, IUser } from "../../redux/types/userTypes";
+import { ViewEditModal } from "../../Components/ViewEditModal/ViewEditModal";
 
 export const Home = () => {
   const [currentPage, setCurrentPage] = useState<"HOME" | "JOBS" | "CUSTOMERS">(

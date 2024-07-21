@@ -1,56 +1,80 @@
-import { useState, useCallback } from "react";
-import "./ConfirmModal.styles.css";
+import {
+  SlButton,
+  SlDialog,
+  SlInput,
+  SlSelect,
+  SlOption,
+} from "@shoelace-style/shoelace/dist/react/index.js";
+import type SlInputElement from "@shoelace-style/shoelace/dist/components/input/input";
+import DatePicker from "react-datepicker";
+import { useState } from "react";
+import { Select } from "./Rows/Select/Select";
+import { Input } from "./Rows/Input/Input";
 
-export const useEditViewModal = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [resolvePromise, setResolvePromise] = useState(null);
-
-  //   const show = useCallback(() => {
-  //     setIsOpen(true);
-  //     return new Promise((resolve) => {
-  //       setResolvePromise(() => resolve);
-  //     });
-  //   }, []);
-
-  //   const confirm = useCallback(() => {
-  //     if (resolvePromise) {
-  //       resolvePromise(true);
-  //       setResolvePromise(null);
-  //     }
-  //     setIsOpen(false);
-  //   }, [resolvePromise]);
-
-  //   const cancel = useCallback(() => {
-  //     if (resolvePromise) {
-  //       resolvePromise(false);
-  //       setResolvePromise(null);
-  //     }
-  //     setIsOpen(false);
-  //   }, [resolvePromise]);
-
-  const ConfirmModal = ({ caption }) =>
-    isOpen ? (
-      <div className="modal">
-        <div className="modal-content">
-          <h2>Confirm Action</h2>
-          <p>{caption}</p>
-          <button
-            className="confirm-modal-button"
-            style={{ backgroundColor: "#5ba86a" }}
-            onClick={confirm}
-          >
-            Confirm
-          </button>
-          <button
-            className="confirm-modal-button"
-            style={{ backgroundColor: "#ff3a2c" }}
-            onClick={cancel}
-          >
-            Cancel
-          </button>
-        </div>
+export const ViewEditModal = ({ onConfirm, onCancel, isOpen, setIsOpen }) => {
+  const [modalData, setModalData] = useState({});
+  const handleSetNewModalData = (value: string, label: string) => {
+    setModalData((prev) => ({ ...prev, [label]: value }));
+  };
+  return (
+    <SlDialog
+      label="Add new job"
+      open={isOpen}
+      onSlRequestClose={() => {
+        // setAddJobModalOpen(false);
+        // setNewJobData({});
+        setIsOpen(false);
+      }}
+    >
+      <Select />
+      <Input label="Input 1" />
+      <Input label="Input 2" />
+      <div className="date-time-picker">
+        <span>Pick date and time</span>
+        <DatePicker
+          className="custom-datepicker"
+          // selected={newJobData.scheduledDate ?? date}
+          // onChange={(date: Date) => {
+          //   setNewJobData((prev) => ({
+          //     ...prev,
+          //     scheduledDate: date,
+          //   }));
+          //   setDate(date);
+          // }}
+          showTimeSelect
+          timeIntervals={15}
+          timeFormat="HH:mm"
+          dateFormat="dd/MM/YYYY HH:mm"
+        />
       </div>
-    ) : null;
-
-  return { show, ConfirmModal };
+      <div className="jobs-dialog-buttons-wrapper">
+        <SlButton
+          slot="footer"
+          variant="success"
+          // onClick={() => {
+          //   handleSubmitCreateNewJob();
+          //   setAddJobModalOpen(false);
+          // }}
+          // disabled={
+          //   !newJobData.description ||
+          //   !newJobData.title ||
+          //   !newJobData.customer_id
+          // }
+        >
+          Confirm
+        </SlButton>
+        <SlButton
+          slot="footer"
+          variant="danger"
+          onClick={() => {
+            // dispatch(resetFocusedJob());
+            // setAddJobModalOpen(false);
+            setIsOpen(false);
+          }}
+        >
+          Cancel
+        </SlButton>
+      </div>
+    </SlDialog>
+  );
 };

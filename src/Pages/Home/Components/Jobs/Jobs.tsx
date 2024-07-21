@@ -23,6 +23,7 @@ import { daysAheadOptions } from "../../../../Utils/daysAheadOptions";
 import { IReduxStoreRootState } from "../../../../redux/types/storeType";
 import { IJob } from "../../../../redux/types/jobsTypes";
 import { useConfirm } from "../../../../Utils/Custom Hooks/UseConfirm/useConfirm";
+import { ViewEditModal } from "../../../../Components/ViewEditModal/ViewEditModal";
 
 export const Jobs = () => {
   const userData = useSelector(
@@ -177,8 +178,8 @@ export const Jobs = () => {
         ADD NEW JOB
       </button>
       <SlDialog
-        label="Dialog"
-        open={addJobModalOpen}
+        label="Add new job"
+        open={false}
         onSlRequestClose={() => {
           setAddJobModalOpen(false);
           setNewJobData({});
@@ -426,6 +427,10 @@ export const Jobs = () => {
         </SlDialog>
       ) : null}
       <ConfirmModal caption="Are you sure you want to delete this job?" />
+      <ViewEditModal
+        isOpen={addJobModalOpen}
+        setIsOpen={setAddJobModalOpen}
+      ></ViewEditModal>
     </div>
   );
 };
