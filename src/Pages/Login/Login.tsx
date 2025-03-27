@@ -13,7 +13,7 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState("");
   const { startLoading, stopLoading } = useContext(LoadingContext);
   const dispatch = useDispatch();
-
+  console.log(supabase)
   const handleChange = (event) => {
     const { name, value } = event.target;
     if (name === "email") {
@@ -32,6 +32,7 @@ function Login() {
         password,
       })
       .then((data) => {
+        console.log(data)
         if (data.error) {
           toast("Invalid username/password", {
             position: "bottom-center",
