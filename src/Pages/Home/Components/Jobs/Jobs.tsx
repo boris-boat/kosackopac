@@ -41,6 +41,7 @@ export const Jobs = () => {
   const focusedJob = useSelector(
     (state: IReduxStoreRootState) => state.jobsData.data.focusedJob
   );
+  console.log(focusedJob)
   const emptyNewJobData = {
     customer_id: "",
     title: "",
@@ -369,7 +370,7 @@ export const Jobs = () => {
               <span>Date and time</span>
               <DatePicker
                 className="custom-datepicker"
-                selected={focusedJob.scheduledDate}
+                selected={new Date(focusedJob.scheduledDate)}
                 onChange={(date) => {
                   dispatch(setFocusedJob({ scheduledDate: date }));
                 }}
